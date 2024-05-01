@@ -1,0 +1,12 @@
+.err-modal-container .modal-content {
+  background-color: #f9c1b6;
+}
+
+.err-modal-title {
+  color: #f43e18;
+  text-align: center;
+}
+
+.err-txt {
+  padding-top: 30px;
+}

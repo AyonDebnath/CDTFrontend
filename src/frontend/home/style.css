@@ -1,0 +1,1044 @@
+/*-------------------------- 
+	1. Page Banner Title Area
+--------------------------*/
+
+.text-right {
+  text-align: right;
+}
+
+.logo-img {
+  height: 50px;
+  width: 200px;
+}
+
+.logo-img-smll {
+  margin-top: 20%;
+  height: 35px;
+  width: 140px;
+  margin-left: -50%;
+}
+
+.page-banner-area {
+  background-image: url("/frontend/img/section-bg/Section-bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover;
+  background-size: cover;
+  padding: 270px 0 150px;
+}
+.page-banner {
+}
+.page-banner h1 {
+  color: #fff;
+  display: block;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 30px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+.page-banner.text-left h1 {
+  float: left;
+}
+.page-banner.text-right h1 {
+  float: right;
+}
+.page-banner ul {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 15px;
+}
+.page-banner.text-left ul {
+  float: right;
+}
+.page-banner.text-right ul {
+  float: left;
+}
+.page-banner ul li {
+  display: block;
+  float: left;
+  padding: 0 6px;
+  position: relative;
+}
+.page-banner ul li:first-child {
+  padding-left: 0;
+}
+.page-banner ul li:last-child {
+  padding-right: 0;
+}
+.page-banner ul li + li::before {
+  color: #fff;
+  content: "/";
+  display: block;
+  left: -3px;
+  line-height: 9px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+}
+.page-banner ul li a,
+.page-banner ul li span {
+  color: #fff;
+  display: block;
+  font-size: 12px;
+  line-height: 9px;
+  text-transform: uppercase;
+}
+.page-banner ul li a:hover {
+  color: #f43e18;
+}
+/*-------------------------- 
+	2. Feature Area
+--------------------------*/
+.feature-wrapper {
+}
+.feature-left {
+}
+.feature-right {
+}
+/* Feature Image */
+.feature-image {
+  z-index: 9;
+}
+/* Single Feature */
+.single-feature {
+  position: relative;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  z-index: 1;
+}
+.single-feature:nth-child(1) {
+  padding: 15px 0 14px;
+}
+.single-feature:nth-child(2) {
+  padding: 37px 0;
+}
+.single-feature:nth-child(3) {
+  padding: 15px 0;
+}
+/* Single Feature Hover */
+.single-feature:hover {
+  background-color: #fff;
+}
+.single-feature::before {
+  background-color: #fff;
+  bottom: 0;
+  content: "";
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  width: 50%;
+  z-index: -1;
+}
+.single-feature:hover::before {
+  opacity: 1;
+}
+.feature-left .single-feature::before {
+  left: 100%;
+}
+.feature-right .single-feature::before {
+  right: 100%;
+}
+/* Left Single Feature */
+.feature-left .single-feature {
+  margin-right: -7px;
+}
+.feature-left .single-feature:nth-child(2) {
+  margin-left: -15px;
+  padding-right: 24px;
+}
+/* Right Single Feature */
+.feature-right .single-feature {
+  margin-left: -7px;
+}
+.feature-right .single-feature:nth-child(2) {
+  margin-right: -15px;
+  padding-left: 24px;
+}
+/* Featue Icon */
+.single-feature .icon {
+  display: block;
+  margin-top: 19px;
+  min-width: 36px;
+}
+.feature-left .icon {
+  float: right;
+  margin-left: 29px;
+  text-align: left;
+}
+.feature-right .icon {
+  float: left;
+  margin-right: 29px;
+  text-align: right;
+}
+.single-feature .icon i {
+  color: #f43e18;
+  font-size: 36px;
+  display: block;
+}
+/* Feature Text */
+.single-feature .text {
+}
+.single-feature .text h4 {
+  font-size: 18px;
+  margin-bottom: 9px;
+}
+.single-feature .text p {
+}
+/*-------------------------- 
+	3. Course Area
+--------------------------*/
+.course-wrapper {
+}
+.course-item {
+  background: rgba(0, 0, 0, 0)
+    url("/frontend/img/shape/course/course-white (2).png") no-repeat scroll
+    center center;
+  -webkit-background-size: cover;
+  background-size: cover;
+  overflow: hidden;
+  padding: 34px 25px 40px;
+  position: relative;
+  transition: all 1s ease 0s;
+  z-index: 1;
+}
+.course-item i {
+  color: #f43e18;
+  display: inline-block;
+  font-size: 48px;
+  margin-bottom: 18px;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+.course-item h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 19px;
+  padding-bottom: 19px;
+  position: relative;
+  text-transform: uppercase;
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+.course-item h4::before {
+  background-color: #f43e18;
+  bottom: 0;
+  content: "";
+  height: 2px;
+  left: 50%;
+  margin-left: -25px;
+  position: absolute;
+  width: 50px;
+}
+.course-item p {
+  -webkit-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+/* Course Hover */
+.course-item:hover {
+  background-image: url("/frontend/img/shape/course/course-hover.png");
+  transform: scale(1.1);
+}
+.course-item:hover i {
+  color: #fff;
+}
+.course-item:hover h4 {
+  color: #fff;
+}
+.course-item:hover h4::before {
+  background-color: #fff;
+}
+.course-item:hover p {
+  color: #fff;
+}
+/*--------------------------
+	4. Video Area
+--------------------------*/
+.video-area {
+  background: rgba(0, 0, 0, 0) url("/frontend/img/section-bg/video.jpg") repeat
+    scroll 0 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  padding: 195px 0;
+}
+.video-content {
+}
+.video-content a {
+  color: #ffffff;
+  display: inline-block;
+}
+.video-content a:hover {
+  color: #f43e18;
+}
+.video-content a i {
+  display: block;
+  font-size: 60px;
+}
+.video-content h3 {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 18px;
+  margin: 30px 0 0;
+  text-transform: uppercase;
+}
+/*--------------------------
+	5. Instructor Area
+--------------------------*/
+.instructor-details {
+}
+.instructor-name {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.instructor-title {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.instructor-details p {
+  margin-bottom: 17px;
+}
+.instructor-social {
+}
+.instructor-social a {
+  border: 1px solid #aaaaaa;
+  color: #aaaaaa;
+  display: block;
+  float: left;
+  height: 35px;
+  margin-right: 15px;
+  text-align: center;
+  width: 35px;
+}
+.instructor-social a i {
+  display: block;
+  font-size: 18px;
+  line-height: 33px;
+}
+.instructor-social a:hover {
+  background-color: #f43e18;
+  border-color: #f43e18;
+  color: #fff;
+}
+.instructor-image {
+  margin-top: 74px;
+}
+.instructor-image img {
+  width: 100%;
+}
+/* Instructor Tab List */
+.instructor-tab-list {
+  float: left;
+  margin-top: -127px;
+}
+.instructor-tab-list li {
+  display: block;
+  float: left;
+  margin-right: 30px;
+  padding-bottom: 12px;
+  width: 115px;
+}
+.instructor-tab-list li:last-child {
+  margin-right: 0;
+}
+.instructor-tab-list li a {
+  display: block;
+  position: relative;
+}
+.instructor-tab-list li a::before {
+  background-color: #000;
+  bottom: 0;
+  content: "";
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.instructor-tab-list li a:hover::before,
+.instructor-tab-list li.active a::before {
+  opacity: 0.5;
+}
+
+.destroy {
+  display: none !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0 !important;
+}
+
+.mab-5 {
+  margin-bottom: 0 !important;
+}
+
+.cta-area2 {
+  background-color: #f43e18;
+}
+
+.lesson-btn1 {
+  background-color: #32096f !important;
+  border: none !important;
+}
+
+.lesson-btn1:hover {
+  background-color: white !important;
+  color: #32096f;
+}
+
+.lesson-btn2 {
+  background-color: #f43e18 !important;
+  border: none !important;
+}
+
+.lesson-btn2:hover {
+  background-color: white !important;
+  color: #f43e18;
+}
+
+.instructor-tab-list li a::after {
+  background-color: #dddddd;
+  border-radius: 50%;
+  bottom: -12px;
+  content: "";
+  height: 2px;
+  left: 10px;
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+}
+.instructor-tab-list li a:hover::after,
+.instructor-tab-list li.active a::after {
+  opacity: 1;
+}
+.instructor-tab-list li a img {
+  width: 100%;
+}
+/*--------------------------
+	6. FAQ Area
+--------------------------*/
+.faq-image {
+  margin-top: 75px;
+}
+.faq-image img {
+  width: 100%;
+}
+/*--------------------------
+	7. Call To Action Area
+--------------------------*/
+.cta-area {
+  background-color: #32096f;
+}
+.call-to-action {
+}
+.call-to-action h3 {
+  color: #fff;
+  display: block;
+  float: left;
+  font-weight: 600;
+  line-height: 36px;
+  margin: 0;
+  text-transform: uppercase;
+}
+.call-to-action a {
+  float: right;
+}
+/*--------------------------
+	8. Contact Area
+--------------------------*/
+#contact-map {
+  height: 530px;
+}
+.contact-info {
+}
+.contact-info .single-info {
+}
+.contact-info .single-info + .single-info {
+  margin-top: 45px;
+}
+.contact-info .single-info .icon {
+  background-color: #f43e18;
+  border-radius: 2px;
+  color: #fff;
+  display: block;
+  float: left;
+  height: 44px;
+  margin-left: 10px;
+  margin-right: 40px;
+  margin-top: 10px;
+  text-align: center;
+  transform: rotate(45deg);
+  width: 44px;
+}
+.contact-info .single-info .icon i {
+  display: block;
+  font-size: 24px;
+  line-height: 44px;
+  transform: rotate(-45deg);
+}
+.contact-info .single-info .content {
+}
+.contact-info .single-info .content h5 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 11px;
+  text-transform: uppercase;
+}
+.contact-info .single-info .content p {
+}
+.contact-info .single-info .content p a {
+  display: block;
+}
+.contact-info .single-info .content p a:hover {
+  color: #f43e18;
+}
+/*--------------------------
+	9. Dark Version Style
+--------------------------*/
+.dark-wrapper .bg-white,
+.dark-wrapper.bg-white {
+  background-color: #1e2127;
+}
+.dark-wrapper .bg-gray,
+.dark-wrapper.bg-gray {
+  background-color: #252830;
+}
+.dark-wrapper .overlay-white::before,
+.dark-wrapper.overlay-white::before {
+  background-color: #000;
+}
+.dark-wrapper p,
+.dark-wrapper span {
+  color: #d0d0d0;
+}
+.dark-wrapper h1,
+.dark-wrapper h2,
+.dark-wrapper h3,
+.dark-wrapper h4,
+.dark-wrapper h5,
+.dark-wrapper h6,
+.dark-wrapper a {
+  color: #fff;
+}
+.dark-wrapper .section-title::before,
+.dark-wrapper .section-title::after {
+  background-color: #444;
+}
+/* Course Form */
+.dark-wrapper .find-course-form h5 span {
+  color: #555555;
+}
+/* Feature */
+.dark-wrapper .single-feature:hover {
+  background-color: #1e2127;
+}
+.dark-wrapper .single-feature::before {
+  background-color: #1e2127;
+}
+/* Funfact */
+.dark-wrapper .single-facts i {
+  color: #d0d0d0;
+}
+.dark-wrapper .single-facts h1::before {
+  background-color: #d0d0d0;
+}
+/* Gallery */
+.dark-wrapper .gallery-filter button::before,
+.dark-wrapper .gallery-filter button::after {
+  background-color: #d0d0d0;
+}
+.dark-wrapper .gallery-filter button {
+  color: #d0d0d0;
+}
+/* Testimonial */
+.dark-wrapper .ts-arrows {
+  color: #fff;
+}
+/* FAQ */
+.dark-wrapper .panel-group .panel {
+  background-color: #252830;
+}
+/* Blog */
+.dark-wrapper .blog-item .meta p {
+  color: #d0d0d0;
+}
+.dark-wrapper .blog-item .title a {
+  color: #fff;
+}
+.dark-wrapper .category-sidebar ul li a {
+  color: #fff;
+}
+/* Contact */
+.dark-wrapper .form .input input[type="text"],
+.dark-wrapper .form .input input[type="email"],
+.dark-wrapper .form .input input[type="tel"],
+.dark-wrapper .form .input input[type="password"],
+.dark-wrapper .form .input input[type="search"],
+.dark-wrapper .form .input input[type="url"],
+.dark-wrapper .form .input textarea {
+  color: #fff;
+}
+/* Other */
+.dark-wrapper .pagination ul li a {
+  color: #fff;
+}
+
+/*--------------------------
+	10. Footer Style
+--------------------------*/
+
+.footer-img {
+  height: 29px;
+  width: 99px;
+}
+
+/*--------------------------
+	11. About Section Style
+--------------------------*/
+
+.about-section {
+  padding: 30px 60px 30px 60px;
+}
+
+.about-title {
+  padding: 60px 0 60px 0;
+  font-size: 30px;
+}
+
+/*--------------------------
+	12. Signup Section Style
+--------------------------*/
+
+.signup-text {
+  width: 90%;
+  padding-top: 20px;
+  text-align: right;
+}
+
+.signup-link {
+  text-decoration: none;
+  color: #f43e18 !important;
+  transition: all 1s ease 0s;
+}
+
+.signup-link:hover {
+  text-decoration: none;
+  color: #f43e18 !important;
+  font-size: 15px !important;
+}
+
+/*--------------------------
+	13. Modal Section Style
+--------------------------*/
+
+.modal-header {
+  border-bottom: none !important;
+}
+
+.modal-title {
+  text-align: center;
+  width: 100%;
+  font-size: 25px;
+  font-weight: 700;
+  color: #f43e18;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+.close-btn {
+  border: none !important;
+  height: 40px;
+  width: 40px;
+  margin-top: 20px;
+  margin-right: 20px;
+  background-color: #f8d7da !important;
+  border-radius: 5px !important;
+  color: #f43e18 !important;
+  font-size: 30px !important;
+  font-weight: bolder !important;
+  transition: all 0.5s ease 0s !important;
+}
+
+.close-btn:hover {
+  background-color: #f43e18;
+  color: #f8d7da;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.close-btn:focus {
+  outline: none !important;
+}
+
+.sign-submit {
+  padding: 40px;
+}
+
+.close-btn2 {
+  border: none !important;
+  margin-top: 20px;
+  margin-right: 20px;
+  background-color: #f8d7da !important;
+  border-radius: 5px !important;
+  color: #f43e18 !important;
+  transition: all 0.5s ease 0s !important;
+}
+
+.close-btn2:hover {
+  background-color: #f43e18 !important;
+  color: #f8d7da !important;
+}
+
+.close-btn2:focus {
+  outline: none !important;
+}
+
+.normal-driving {
+  color: #f43e18;
+  font-size: 50px;
+}
+
+.modal-header {
+  padding-bottom: 0 !important;
+}
+
+.modal-body {
+  padding-top: 0 !important;
+}
+
+.modal-course-title {
+  color: #333333;
+}
+
+.modal-course {
+  position: relative;
+}
+.modal-course-title::before {
+  background-color: #f43e18;
+  right: 40%;
+  top: 85%;
+  content: "";
+  height: 2px;
+  position: absolute;
+  width: 120px;
+}
+
+.learn-more {
+  color: #f43e18;
+}
+
+.course-item:hover .learn-more {
+  color: #32096f;
+}
+
+@media only screen and (max-width: 600px) {
+  .close-btn {
+    border: none !important;
+    height: 60px !important;
+    width: 60px !important;
+    margin-top: 20px;
+    margin-right: 20px;
+    background-color: #f8d7da;
+    color: #f43e18;
+    border-radius: 5px;
+    transition: all 1s ease 0s;
+    position: relative;
+  }
+  .close-btn i {
+    position: absolute;
+    right: 25%;
+    top: 27%;
+  }
+
+  .close-btn:hover {
+    background-color: #f43e18;
+    color: #f8d7da;
+    font-size: 30px;
+    font-weight: bolder;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .course-item {
+    background: rgba(0, 0, 0, 0)
+      url("/frontend/img/shape/course/mobile-course.png") no-repeat scroll
+      center center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
+    padding: 34px 25px 40px;
+    position: relative;
+    transition: all 1s ease 0s;
+    z-index: 1;
+  }
+
+  .course-item:hover {
+    background-image: url("/frontend/img/shape/course/course-hover.png");
+    transform: scale(1.1);
+  }
+
+  .modal-header {
+    padding-top: 70px;
+  }
+}
+
+.custom-select {
+  width: 100%;
+}
+
+.custom-a {
+  color: white !important;
+  cursor: pointer;
+}
+
+.custom-a:hover {
+  color: #32096f !important;
+}
+
+.custom-a2 {
+  color: white !important;
+}
+
+.custom-a2:hover {
+  color: #32096f !important;
+  cursor: pointer;
+}
+
+.success-modal-img {
+  height: 200px;
+  width: 200px;
+  margin-left: 30%;
+}
+
+@media (max-width: 992px) {
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    display: none !important;
+  }
+}
+.swiper-pagination-fraction,
+.swiper-pagination-custom,
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: 200px !important;
+  left: -100px !important;
+}
+.swiper-pagination-bullet {
+  background-color: #ffff !important;
+  height: 30px !important;
+  width: 3px !important;
+  margin-bottom: 5px !important;
+}
+.swiper-pagination-bullet-active {
+  background-color: #f43e18 !important;
+  height: 50px !important;
+  margin-bottom: 0 !important;
+}
+
+@media (min-width: 1390px) {
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: 20vh !important;
+    left: -100px !important;
+  }
+
+  .swiper-pagination-bullet {
+    margin-bottom: 5px !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    display: none !important;
+  }
+
+  .swiper-pagination-bullet {
+    margin-bottom: 5px !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1390px) {
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: 5vh !important;
+    left: -100px !important;
+  }
+
+  .swiper-pagination-bullet {
+    margin-bottom: 5px !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    margin-bottom: 0 !important;
+  }
+}
+
+.moving-header {
+  display: none;
+}
+
+.sticky-nav {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  background-color: #32096f;
+}
+
+.light {
+  color: white;
+}
+
+.non-visible-menu {
+  display: none !important;
+}
+
+.visible-menu {
+  display: block;
+}
+
+.customDatePciker {
+  background-color: transparent;
+}
+
+.text-left {
+  margin-left: -5%;
+}
+
+.margin-none {
+  margin-bottom: 0;
+}
+
+.error-input,
+.error-input::placeholder {
+  color: #f43e18;
+  font-size: 12px;
+}
+
+.error-input {
+  border: 1px solid #f43e18 !important;
+}
+
+.error-text {
+  color: #f43e18;
+}
+
+.m-all-10 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-home {
+  --bs-modal-zindex: 999 !important;
+  --vz-modal-zindex: 999 !important;
+}
+
+.modal-backdrop {
+  --bs-backdrop-zindex: 998 !important;
+  --vz-backdrop-zindex: 998 !important;
+}
+
+.book-btn {
+  border: 1px solid white !important;
+}
+
+.book-btn:hover {
+  background-color: white !important;
+}
+
+.pass-div {
+  position: relative;
+}
+
+.pass-visi,
+.pass-visi-dashboard {
+  position: absolute;
+  font-size: 18px;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.pass-visi-dashboard {
+  top: 40px !important;
+}
+
+.loading-spinner {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.assessment-text {
+  display: inline-block;
+  position: relative;
+}
+
+.assessment-text span {
+  position: absolute;
+  right: -22%;
+  top: -30%;
+  color: Black;
+  font-weight: bolder;
+  cursor: pointer;
+}
+.info-assess-text {
+  position: absolute;
+  font-size: 12px !important;
+  top: 0;
+  left: 34%;
+  background-color: white;
+  padding: 5px;
+  border-radius: 10px;
+  color: #f43e18;
+}
+
+.action-btn {
+  cursor: pointer;
+}
+
+.user-info-image {
+  height: 100px;
+  width: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+}
