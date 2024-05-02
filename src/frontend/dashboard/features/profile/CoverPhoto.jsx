@@ -27,7 +27,7 @@ export default function CoverPhoto() {
     <div className="profile-foreground position-relative mx-n4 mt-n4">
       <div className="profile-wid-bg">
         <img
-          src={`${import.meta.env.VITE_SERVER_NAME}${userData?.coverImage}`}
+          src={`${userData?.coverImageURL}`}
           alt=""
           className="profile-wid-img"
         />

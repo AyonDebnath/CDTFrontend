@@ -239,9 +239,7 @@ export default function ProfileSetting() {
                 <img src={coverPreview} className="profile-wid-img" alt="" />
               ) : (
                 <img
-                  src={`${import.meta.env.VITE_SERVER_NAME}${
-                    userData.coverImage
-                  }`}
+                  src={`${userData.coverImageURL}`}
                   className="profile-wid-img"
                   alt=""
                 />
@@ -284,9 +282,7 @@ export default function ProfileSetting() {
                         />
                       ) : (
                         <img
-                          src={`${import.meta.env.VITE_SERVER_NAME}${
-                            userData.image
-                          }`}
+                          src={`${userData.imageURL}`}
                           className="rounded-circle avatar-xl img-thumbnail user-profile-image material-shadow"
                           alt="user-profile-image"
                         />

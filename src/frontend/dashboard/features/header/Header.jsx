@@ -501,9 +501,7 @@ export default function Header() {
                     <span className="d-flex align-items-center">
                       <img
                         className="rounded-circle header-profile-user"
-                        src={`${import.meta.env.VITE_SERVER_NAME}${
-                          userData.image
-                        }`}
+                        src={`${userData.imageURL}`}
                         alt="Header Avatar"
                       />
                       <span className="text-start ms-xl-2">

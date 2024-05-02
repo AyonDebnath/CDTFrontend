@@ -51,7 +51,7 @@ export default function ProfilePhoto() {
             <div className="col-auto">
               <div className="avatar-lg">
                 <img
-                  src={`${import.meta.env.VITE_SERVER_NAME}${userData?.image}`}
+                  src={`${userData?.imageURL}`}
                   alt="user-img"
                   className="img-thumbnail rounded-circle"
                 />
