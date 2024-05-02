@@ -64,10 +64,10 @@ export default function AdminCreate() {
         formData,
         { Authorization: "Bearer " + adminAuth.adminToken }
       );
-
+      console.log(responseData);
       navigate(`/admin/${adminId}`);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   }
 
