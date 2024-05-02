@@ -194,9 +194,7 @@ export default function EditModal({ curUser }) {
                           <div className="avatar-lg p-1">
                             <div className="avatar-title bg-light rounded-circle">
                               <img
-                                src={`${import.meta.env.VITE_SERVER_NAME}${
-                                  curUser.image
-                                }`}
+                                src={`${curUser.imageURL}`}
                                 id="companylogo-img"
                                 className="avatar-md rounded-circle object-fit-cover"
                               />

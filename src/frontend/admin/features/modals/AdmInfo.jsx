@@ -19,10 +19,7 @@ export default function AdminInfoModal({ curAdmin }) {
           <div className="container">
             <div className="row">
               <div className="col-12">
-                <img
-                  src={`${import.meta.env.VITE_SERVER_NAME}${curAdmin.image}`}
-                  className="user-info-image"
-                />
+                <img src={`${curAdmin.imageURL}`} className="user-info-image" />
               </div>
               <div className="col-1"></div>
               <div className="col-10">

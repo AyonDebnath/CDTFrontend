@@ -30,10 +30,7 @@ export default function UserInfoModal({ curUser }) {
           <div className="container">
             <div className="row">
               <div className="col-12">
-                <img
-                  src={`${import.meta.env.VITE_SERVER_NAME}${curUser.image}`}
-                  className="user-info-image"
-                />
+                <img src={`${curUser.imageURL}`} className="user-info-image" />
               </div>
               <div className="col-1"></div>
               <div className="col-10">

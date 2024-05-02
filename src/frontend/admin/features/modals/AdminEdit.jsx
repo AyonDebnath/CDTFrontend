@@ -100,6 +100,7 @@ export default function AdminEditModal({ curAdmin }) {
       formData.append("role", formState.inputs.role.value);
       formData.append("password", curAdmin.password);
       formData.append("image", curAdmin.image);
+      formData.append("imageURL", curAdmin.imageURL);
       await sendRequest(
         `http://localhost:5000/api/admin/info/${curAdmin.id}`,
         "PATCH",
