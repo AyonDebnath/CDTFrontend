@@ -500,9 +500,7 @@ export default function AdminHeader() {
                     <span className="d-flex align-items-center">
                       <img
                         className="rounded-circle header-profile-user"
-                        src={`${import.meta.env.VITE_SERVER_NAME}${
-                          adminData.image
-                        }`}
+                        src={`${adminData.imageURL}`}
                         alt="Header Avatar"
                       />
                       <span className="text-start ms-xl-2">

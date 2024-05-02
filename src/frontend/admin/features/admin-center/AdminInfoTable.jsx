@@ -74,9 +74,7 @@ export default function AdminInfoTable({ adminData }) {
                             <div className="d-flex align-items-center">
                               <div className="flex-shrink-0">
                                 <img
-                                  src={`${import.meta.env.VITE_SERVER_NAME}${
-                                    elem.image
-                                  }`}
+                                  src={`${elem.imageURL}`}
                                   alt=""
                                   className="avatar-xxs rounded-circle image_src object-fit-cover"
                                 />
