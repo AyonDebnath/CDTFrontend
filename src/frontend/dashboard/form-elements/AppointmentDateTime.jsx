@@ -5,7 +5,6 @@ import { DatePicker } from "antd";
 import PropTypes from "prop-types";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { useParams } from "react-router-dom";
 import { useDate } from "../../shared/hooks/date-hook";
 
 function dateReducer(state, action) {
@@ -37,21 +36,28 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
 
   const [startApp, setStartApp] = useState("");
   const [endApp, setEndApp] = useState("");
-  const [startTime, setStartTime] = useState();
+  const [maxDate, setMaxDate] = useState();
+  const [minDate, setMinDate] = useState();
   const [endTimeArr, setEndTimeArr] = useState();
   const [visiRadio1, setVisiRadio1] = useState("0");
   const [visiRadio2, setVisiRadio2] = useState("0");
   const [duration, setDuration] = useState("0 Hours");
   const [selectedDate, setSelectedDate] = useState();
 
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { sendRequest } = useHttpClient();
   const { getIntValue, getTimeValue } = useDate();
   const [appTime, setAppTime] = useState([]);
-  const userID = useParams().uid;
 
   async function handDateChange(date, dateString) {
+    const curD = new Date();
+
+    const today = curD.toLocaleDateString("en-CA");
+
+    if (!dateString) {
+      dateString = today;
+    }
+
     setSelectedDate(dateString);
-    startTimeHandler(dateString);
     if (!dateString) {
       setVisiRadio1("0");
       setVisiRadio2("0");
@@ -62,11 +68,13 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
           import.meta.env.VITE_SERVER_NAME
         }api/dashboard/appointment/${dateString}`
       );
-      const blockedTime =
-        responseData.appointment && handleAppTime(responseData.appointment);
+      const { blockedTime, avaiTimeArr } = handleAppTime(
+        responseData.appointment,
+        dateString
+      );
 
       if (blockedTime) {
-        handleAvailability(blockedTime);
+        handleAvailability(blockedTime, avaiTimeArr);
       } else {
         handleAvailability([]);
       }
@@ -74,34 +82,92 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
       console.log(err);
     }
   }
-
-  const curD = new Date();
   const dateFormat = "YYYY-MM-DD";
-  const avaiTimeArr = [];
   const avaiTimeArr2 = [];
 
-  const startTimeHandler = (dateNow) => {
-    const currentDate = new Date();
-    let startTimer = currentDate.getHours();
+  useEffect(() => {
+    const curD = new Date();
 
+    let startTimer = curD.getHours();
     startTimer = startTimer + 1;
     if (startTimer >= 16) {
       curD.setDate(curD.getDate() + 1);
-      startTimer = 6;
-    } else if (startTimer < 6) {
-      startTimer = 6;
-    } else if (dateNow != currentDate.toLocaleDateString("en-CA")) {
-      startTimer = 6;
+    }
+    let dateNow = "";
+
+    curD.getDate().toString().length === 1
+      ? (dateNow = "0" + curD.getDate().toString())
+      : (dateNow = curD.getDate().toString());
+
+    const minD =
+      curD.getFullYear().toString() +
+      "-" +
+      "0" +
+      (curD.getMonth() + 1).toString() +
+      "-" +
+      dateNow;
+
+    curD.setDate(curD.getDate() + 90);
+
+    curD.getDate().toString().length === 1
+      ? (dateNow = "0" + curD.getDate().toString())
+      : (dateNow = curD.getDate().toString());
+
+    const maxD =
+      curD.getFullYear().toString() +
+      "-" +
+      "0" +
+      (curD.getMonth() + 1).toString() +
+      "-" +
+      dateNow;
+
+    setMinDate(minD);
+    setMaxDate(maxD);
+  }, [minDate, maxDate]);
+
+  function handleAppTime(appointments, dateString) {
+    let curD = new Date();
+    let startTime;
+    if (dateString === curD.toLocaleDateString("en-CA")) {
+      startTime = curD.getHours() + 1;
+    } else {
+      startTime = 6;
     }
 
-    setStartTime(startTimer);
-  };
-  function handleAppTime(appointments) {
+    const avaiTimeArr = [];
+
+    for (let i = startTime; i <= 16; i += 1.5) {
+      if (i <= 11.5) {
+        if (i % 1 === 0) {
+          avaiTimeArr.push(i.toString() + ":00" + "AM");
+        } else {
+          avaiTimeArr.push(Math.floor(i).toString() + ":30" + "AM");
+        }
+      } else if (i > 11.5 && i <= 12.5) {
+        if (i % 1 === 0) {
+          avaiTimeArr.push(i.toString() + ":00" + "PM");
+        } else {
+          avaiTimeArr.push(Math.floor(i).toString() + ":30" + "PM");
+        }
+      } else {
+        if (i % 1 === 0) {
+          avaiTimeArr.push((i - 12).toString() + ":00" + "PM");
+        } else {
+          avaiTimeArr.push(Math.floor(i - 12).toString() + ":30" + "PM");
+        }
+      }
+    }
+
     let blockedTime = [];
     let userApps;
-    if (appointments.userId != "guest") {
+    if (appointments && appointments.userId != "guest") {
       userApps = appointments;
+    } else if (!appointments) {
+      userApps = [];
+      blockedTime = [];
+      return { blockedTime, avaiTimeArr };
     }
+
     userApps.forEach((elem) => {
       let sTimeStr;
       let sTime;
@@ -147,31 +213,10 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
         }
       }
     });
-    return blockedTime;
-  }
-  for (let i = startTime; i <= 16; i += 1.5) {
-    if (i <= 11.5) {
-      if (i % 1 === 0) {
-        avaiTimeArr.push(i.toString() + ":00" + "AM");
-      } else {
-        avaiTimeArr.push(Math.floor(i).toString() + ":30" + "AM");
-      }
-    } else if (i > 11.5 && i <= 12.5) {
-      if (i % 1 === 0) {
-        avaiTimeArr.push(i.toString() + ":00" + "PM");
-      } else {
-        avaiTimeArr.push(Math.floor(i).toString() + ":30" + "PM");
-      }
-    } else {
-      if (i % 1 === 0) {
-        avaiTimeArr.push((i - 12).toString() + ":00" + "PM");
-      } else {
-        avaiTimeArr.push(Math.floor(i - 12).toString() + ":30" + "PM");
-      }
-    }
+    return { blockedTime, avaiTimeArr };
   }
 
-  function handleAvailability(blockedTime) {
+  function handleAvailability(blockedTime, avaiTimeArr) {
     const newBlockedTime = blockedTime.map((el) => {
       const timeInt = getIntValue(el);
       return timeInt;
@@ -215,34 +260,6 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
     setAppTime(arr1);
     setVisiRadio1("1");
   }
-
-  let dateNow = "";
-
-  curD.getDate().toString().length === 1
-    ? (dateNow = "0" + curD.getDate().toString())
-    : (dateNow = curD.getDate().toString());
-
-  const minDate =
-    curD.getFullYear().toString() +
-    "-" +
-    "0" +
-    (curD.getMonth() + 1).toString() +
-    "-" +
-    dateNow;
-
-  curD.setDate(curD.getDate() + 90);
-
-  curD.getDate().toString().length === 1
-    ? (dateNow = "0" + curD.getDate().toString())
-    : (dateNow = curD.getDate().toString());
-
-  const maxDate =
-    curD.getFullYear().toString() +
-    "-" +
-    "0" +
-    (curD.getMonth() + 1).toString() +
-    "-" +
-    dateNow;
 
   function handleStart(event) {
     setVisiRadio2("1");

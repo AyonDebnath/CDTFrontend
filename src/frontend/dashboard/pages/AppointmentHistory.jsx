@@ -46,6 +46,8 @@ export default function AppointmentHistory() {
       return "bg-danger";
     } else if (stat === "ADMIN APPROVED") {
       return "bg-warning";
+    } else if (stat === "EXPIRED") {
+      return "bg-dark";
     } else {
       return "bg-success";
     }

@@ -47,6 +47,7 @@ export default function AppointmentInfo({ appDat }) {
         "PATCH",
         JSON.stringify({
           status: "ADMIN CONFIRMED",
+          alertText: "Appointment Confirmed By Admin",
         }),
         {
           "Content-Type": "application/json",

@@ -45,7 +45,7 @@
 }
 
 .alert-span {
-  font-size: 20px;
+  font-size: 29px;
   padding: 7px;
   border-radius: 100%;
 }
@@ -7048,7 +7048,7 @@ button {
 }
 
 .card-success {
-  background-color: #0ab39c!important;
+  background-color: #0ab39c !important;
 }
 
 .card-border-success {

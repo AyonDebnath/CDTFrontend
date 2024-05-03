@@ -46,7 +46,8 @@ export default function ActionTile() {
       if (
         elem?.completed === "NO" &&
         elem?.status === "ADMIN CONFIRMED" &&
-        elem?.paymentStatus === "UNPAID"
+        elem?.paymentStatus === "UNPAID" &&
+        elem?.status != "EXPIRED"
       ) {
         payArr.push(elem);
       }
@@ -57,6 +58,7 @@ export default function ActionTile() {
       if (
         elem?.completed === "NO" &&
         elem?.status === "ADMIN CONFIRMED" &&
+        elem?.status != "EXPIRED" &&
         elem?.paymentStatus === "PAID"
       ) {
         confirmArr.push(elem);

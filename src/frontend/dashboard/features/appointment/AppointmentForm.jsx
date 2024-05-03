@@ -96,6 +96,7 @@ export default function AppointmentForm() {
       formData.append("due", amount);
       formData.append("completed", "NO");
       formData.append("appName", "Lesson" + appDate);
+      formData.append("alertText", "Awaiting Admin Confirmation");
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/home/appointment/${userID}`,
         "POST",
