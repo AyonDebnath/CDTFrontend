@@ -110,7 +110,10 @@ export default function ActionTile() {
                     </p>
                   </>
                 )}
-                <Link to="/user-appointment" className="btn btn-soft-primary">
+                <Link
+                  to={`/user-appointment/${auth.userId}`}
+                  className="btn btn-soft-primary"
+                >
                   Book Now
                 </Link>
               </div>
