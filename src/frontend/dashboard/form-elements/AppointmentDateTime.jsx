@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState, useReducer } from "react";
 import dayjs from "dayjs";
 import { DatePicker } from "antd";
@@ -6,6 +6,10 @@ import PropTypes from "prop-types";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { useDate } from "../../shared/hooks/date-hook";
+import { DateContext } from "../context/date-context";
+import { PaymentModalContext } from "../context/payment-context";
+import AppointmentPay from "../features/modals/appointmentPay";
+import { PaymentDetailsContext } from "../context/pay-details.context";
 
 function dateReducer(state, action) {
   switch (action.type) {
@@ -25,7 +29,7 @@ function dateReducer(state, action) {
   }
 }
 
-export default function AppointmentDateTime({ id, onInput = () => {} }) {
+export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
   const [dateState, dispatch] = useReducer(dateReducer, {
     value: [],
     isValid: false,
@@ -43,6 +47,17 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
   const [visiRadio2, setVisiRadio2] = useState("0");
   const [duration, setDuration] = useState("0 Hours");
   const [selectedDate, setSelectedDate] = useState();
+  const [payShow, setPayShow] = useState(false);
+  const [payToday, setPayToday] = useState(false);
+  const [payAmount, setPayAmount] = useState();
+
+  const payConfig = useContext(PaymentDetailsContext);
+
+  const payToggler = (val) => {
+    setPayShow(val);
+  };
+
+  const [payDate, setPayDate] = useState();
 
   const { sendRequest } = useHttpClient();
   const { getIntValue, getTimeValue } = useDate();
@@ -132,6 +147,23 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
       startTime = curD.getHours() + 1;
     } else {
       startTime = 6;
+    }
+
+    const dateArray = dateString.split("-");
+
+    let date = parseInt(dateArray[2]);
+
+    if (
+      date === curD.getDate() ||
+      date - 1 === curD.getDate() ||
+      date - 2 === curD.getDate()
+    ) {
+      setPayDate(dateString);
+      setPayToday(true);
+    } else {
+      curD.setDate(date - 1);
+      setPayDate(curD.toLocaleDateString("en-CA"));
+      payConfig.paidDets(0, true, "N/A");
     }
 
     const avaiTimeArr = [];
@@ -302,6 +334,10 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
     let dura;
 
     dura = endTime - startTime;
+    if (payToday === true) {
+      setPayAmount(dura * 70);
+      payToggler(true);
+    }
 
     setDuration(dura.toString() + " Hours");
 
@@ -328,100 +364,113 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
 
   return (
     <>
-      <div>
-        <label htmlFor="Inputdate" className="form-label">
-          Input Date
-        </label>
-        <DatePicker
-          style={{
-            background: "white",
-            width: "100%",
-          }}
-          showNow="true"
-          minDate={dayjs(minDate, dateFormat)}
-          maxDate={dayjs(maxDate, dateFormat)}
-          onChange={handDateChange}
-        />
-      </div>
-      <div className={`"container mt-3" ${visiRadio1 === "0" && "destroy"}`}>
-        <div className="row">
-          {/* <!-- Outlined Styles --> */}
-          <p className="mb-2">Start Time</p>
-          <div className="hstack gap-2 flex-wrap">
-            {appTime?.map((val, index) => {
-              return (
-                <React.Fragment key={index + 120}>
-                  <input
-                    //   onchange="checkRadio(2)"
-                    type="radio"
-                    className="btn-check"
-                    value={val}
-                    name="startTime"
-                    id={val + "startTime"}
-                    onClick={handleStart}
-                    key={index}
-                  />
-                  <label
-                    className="btn btn-outline-danger material-shadow"
-                    htmlFor={val + "startTime"}
-                    key={index + 40}
-                  >
-                    {val}
-                  </label>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      <div className={`"container mt-3" ${visiRadio2 === "0" && "destroy"}`}>
-        <div className="row">
-          {/* <!-- Outlined Styles --> */}
-          <p className="mb-2">End Time</p>
-          <div className="hstack gap-2 flex-wrap">
-            {endTimeArr?.map((val2, index) => {
-              return (
-                <React.Fragment key={index + 120}>
-                  <input
-                    //   onchange="checkRadio(2)"
-                    type="radio"
-                    className="btn-check"
-                    value={val2}
-                    name="endTime"
-                    id={val2 + "endTime"}
-                    onClick={handleEnd}
-                    key={index}
-                  />
-                  <label
-                    className="btn btn-outline-danger material-shadow"
-                    htmlFor={val2 + "endTime"}
-                    key={index + 40}
-                  >
-                    {val2}
-                  </label>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-      <div
-        className={`${
-          visiRadio1 === "0" || visiRadio2 === "0" ? "destroy" : ""
-        } `}
-        id="duration"
+      <PaymentModalContext.Provider
+        value={{ payNow: payShow, payToggler: payToggler }}
       >
-        <label htmlFor="durationInput" className="form-label">
-          Duration
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="durationInput"
-          value={duration}
-          disabled
-        />
-      </div>
+        <DateContext.Provider value={{ value: payDate }}>
+          <div>
+            <label htmlFor="Inputdate" className="form-label">
+              Input Date
+            </label>
+            <DatePicker
+              style={{
+                background: "white",
+                width: "100%",
+              }}
+              showNow="true"
+              minDate={dayjs(minDate, dateFormat)}
+              maxDate={dayjs(maxDate, dateFormat)}
+              onChange={handDateChange}
+            />
+          </div>
+          <div
+            className={`"container mt-3" ${visiRadio1 === "0" && "destroy"}`}
+          >
+            <div className="row">
+              {/* <!-- Outlined Styles --> */}
+              <p className="mb-2">Start Time</p>
+              <div className="hstack gap-2 flex-wrap">
+                {appTime?.map((val, index) => {
+                  return (
+                    <React.Fragment key={index + 120}>
+                      <input
+                        //   onchange="checkRadio(2)"
+                        type="radio"
+                        className="btn-check"
+                        value={val}
+                        name="startTime"
+                        id={val + "startTime"}
+                        onClick={handleStart}
+                        key={index}
+                      />
+                      <label
+                        className="btn btn-outline-danger material-shadow"
+                        htmlFor={val + "startTime"}
+                        key={index + 40}
+                      >
+                        {val}
+                      </label>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div
+            className={`"container mt-3" ${visiRadio2 === "0" && "destroy"}`}
+          >
+            <div className="row">
+              {/* <!-- Outlined Styles --> */}
+              <p className="mb-2">End Time</p>
+              <div className="hstack gap-2 flex-wrap">
+                {endTimeArr?.map((val2, index) => {
+                  return (
+                    <React.Fragment key={index + 120}>
+                      <input
+                        //   onchange="checkRadio(2)"
+                        type="radio"
+                        className="btn-check"
+                        value={val2}
+                        name="endTime"
+                        id={val2 + "endTime"}
+                        onClick={handleEnd}
+                        key={index}
+                      />
+                      <label
+                        className="btn btn-outline-danger material-shadow"
+                        htmlFor={val2 + "endTime"}
+                        key={index + 40}
+                      >
+                        {val2}
+                      </label>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div
+            className={`${
+              visiRadio1 === "0" || visiRadio2 === "0" ? "destroy" : ""
+            } `}
+            id="duration"
+          >
+            <label htmlFor="durationInput" className="form-label">
+              Duration
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="durationInput"
+              value={duration}
+              disabled
+            />
+          </div>
+          {user && payAmount && (
+            <AppointmentPay userData={user} amount={payAmount} />
+          )}
+        </DateContext.Provider>
+      </PaymentModalContext.Provider>
     </>
   );
 }
@@ -429,4 +478,5 @@ export default function AppointmentDateTime({ id, onInput = () => {} }) {
 AppointmentDateTime.propTypes = {
   id: PropTypes.string,
   onInput: PropTypes.func,
+  user: PropTypes.object,
 };

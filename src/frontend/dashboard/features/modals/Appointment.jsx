@@ -1,13 +1,19 @@
-export default function Appointment() {
+import { Modal } from "reactstrap";
+import { useContext } from "react";
+import Link from "antd/es/typography/Link";
+import { InfoModalContext } from "../../context/infoModal-context";
+
+import PropTypes from "prop-types";
+
+export default function Appointment({ appData }) {
+  const info = useContext(InfoModalContext);
+
+  const toggle = () => {
+    info.showToggler(false, {});
+  };
+
   return (
-    <div
-      id="appointmentModal"
-      className="modal flip"
-      tabIndex="-1"
-      aria-labelledby="appointmentLabel"
-      aria-hidden="true"
-      // style="display: none"
-    >
+    <Modal isOpen={info.show} toggle={toggle}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
@@ -17,8 +23,7 @@ export default function Appointment() {
             <button
               type="button"
               className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
+              onClick={toggle}
             ></button>
           </div>
           <div className="modal-body">
@@ -35,42 +40,60 @@ export default function Appointment() {
                     <td>Date</td>
                     <td className="text-success">
                       <i className="ri-calendar-check-line fs-17 align-middle"></i>
-                      10 MAR, 2024
+                      {appData?.date}
                     </td>
                   </tr>
                   <tr>
-                    <td>Time</td>
+                    <td>Start Time</td>
                     <td className="text-success">
                       <i className="ri-timer-2-line fs-17 align-middle"></i>{" "}
-                      2:20 PM
+                      {appData?.startTime}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>End Time</td>
+                    <td className="text-success">
+                      <i className="ri-timer-2-line fs-17 align-middle"></i>{" "}
+                      {appData?.endTime}
                     </td>
                   </tr>
                   <tr>
                     <td>Pick Up</td>
                     <td className="text-success">
                       <i className="ri-map-pin-user-line fs-17 align-middle"></i>
-                      20 Nascopie Crescent
+                      {appData?.address}
                     </td>
                   </tr>
                   <tr>
                     <td>Expected Duration</td>
                     <td className="text-success">
-                      <i className="ri-timer-2-line fs-17 align-middle"></i> 1
-                      hour 30 mins
+                      <i className="ri-timer-2-line fs-17 align-middle"></i>
+                      {appData?.duration}
                     </td>
                   </tr>
                   <tr>
                     <td>Payment Confirmation</td>
                     <td className="text-danger">
-                      <button
-                        data-bs-toggle="modal"
-                        data-bs-target="#payModal"
-                        type="button"
-                        className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
-                      >
-                        <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
-                        Unpaid
-                      </button>
+                      {appData?.paymentStatus === "UNPAID" ? (
+                        <button
+                          disabled={appData?.status === "PENDING"}
+                          type="button"
+                          className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
+                        >
+                          <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                          {appData?.paymentStatus}
+                        </button>
+                      ) : (
+                        <Link to={`/user-payment-history/${appData?.userId}`}>
+                          <button
+                            type="button"
+                            className="btn btn-success btn-label waves-effect waves-light rounded-pill"
+                          >
+                            <i className="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                            {appData?.paymentStatus}
+                          </button>
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 </tbody>
@@ -80,11 +103,7 @@ export default function Appointment() {
             {/* <!-- end table responsive --> */}
           </div>
           <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-light"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" className="btn btn-light" onClick={toggle}>
               Close
             </button>
           </div>
@@ -92,6 +111,10 @@ export default function Appointment() {
         {/* <!-- /.modal-content --> */}
       </div>
       {/* <!-- /.modal-dialog --> */}
-    </div>
+    </Modal>
   );
 }
+
+Appointment.propTypes = {
+  appData: PropTypes.object,
+};

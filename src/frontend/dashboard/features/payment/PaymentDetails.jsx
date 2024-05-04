@@ -1,4 +1,4 @@
-import PageTitle from "../user-body/PageTitle";
+import { Link } from "react-router-dom";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -107,6 +107,7 @@ export default function PaymentDetails() {
                               </td>
                               <td>
                                 <button
+                                  disabled={elem.status === "EXPIRED"}
                                   onClick={() => {
                                     setModalApp(elem);
                                     toggle();
@@ -192,15 +193,26 @@ export default function PaymentDetails() {
                 <tr>
                   <td>Payment Confirmation</td>
                   <td className="text-danger">
-                    <button
-                      data-bs-toggle="modal"
-                      data-bs-target="#payModal"
-                      type="button"
-                      className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
-                    >
-                      <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
-                      {modalApp?.paymentStatus}
-                    </button>
+                    {modalApp?.paymentStatus === "UNPAID" ? (
+                      <button
+                        disabled={modalApp.status === "PENDING"}
+                        type="button"
+                        className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
+                      >
+                        <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                        {modalApp?.paymentStatus}
+                      </button>
+                    ) : (
+                      <Link to={`/user-payment-history/${modalApp?.userId}`}>
+                        <button
+                          type="button"
+                          className="btn btn-success btn-label waves-effect waves-light rounded-pill"
+                        >
+                          <i className="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                          {modalApp?.paymentStatus}
+                        </button>
+                      </Link>
+                    )}
                   </td>
                 </tr>
               </tbody>

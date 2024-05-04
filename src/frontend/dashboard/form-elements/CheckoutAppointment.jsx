@@ -6,17 +6,20 @@ import {
 } from "@stripe/react-stripe-js";
 
 import PropTypes from "prop-types";
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
-import { useNavigate } from "react-router-dom";
 
-export default function CheckoutForm({ due, appId, userId }) {
+import { AuthContext } from "../../shared/context/auth-context";
+import { PaymentModalContext } from "../context/payment-context";
+
+import { PaymentDetailsContext } from "../context/pay-details.context";
+import { SiTruenas } from "react-icons/si";
+
+export default function CheckoutAppointment({ due }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const navigate = useNavigate();
 
   const auth = useContext(AuthContext);
+  const pay = useContext(PaymentDetailsContext);
+  const payShow = useContext(PaymentModalContext);
 
   const paymentElementOptions = {
     layout: "tabs",
@@ -25,7 +28,7 @@ export default function CheckoutForm({ due, appId, userId }) {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (event) => {
+  const handlePaySubmit = async (event) => {
     event.preventDefault();
     if (elements == null || stripe == null) {
       return;
@@ -43,7 +46,7 @@ export default function CheckoutForm({ due, appId, userId }) {
         //`Elements` instance that was used to create the Payment Element
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/${userId}`,
+          return_url: `${window.location.origin}/${auth.userId}`,
         },
         redirect: "if_required",
       });
@@ -54,24 +57,8 @@ export default function CheckoutForm({ due, appId, userId }) {
         // details incomplete)
         setErrorMessage(error.message);
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        console.log("here");
-        try {
-          const formData = new FormData();
-          formData.append("amount", parseInt(due));
-          formData.append("alertText", "Payment Received");
-          await sendRequest(
-            `${
-              import.meta.env.VITE_SERVER_NAME
-            }api/dashboard/appointment/payment/${appId}`,
-            "PATCH",
-            formData,
-            { Authorization: "Bearer " + auth.token }
-          );
-
-          navigate("/");
-        } catch (err) {
-          console.log(err);
-        }
+        pay.paidDets(due, true, "PAID");
+        payShow.payToggler(false);
       }
     } catch (err) {
       console.log(err.message);
@@ -79,9 +66,9 @@ export default function CheckoutForm({ due, appId, userId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="px-4">
+    <form className="px-4">
       <PaymentElement options={paymentElementOptions} />
-      <button type="submit" disabled={!stripe || !elements}>
+      <button onClick={handlePaySubmit} disabled={!stripe || !elements}>
         Pay
       </button>
       {/* Show error message to your customers */}
@@ -90,8 +77,6 @@ export default function CheckoutForm({ due, appId, userId }) {
   );
 }
 
-CheckoutForm.propTypes = {
-  due: PropTypes.string,
-  appId: PropTypes.string,
-  userId: PropTypes.string,
+CheckoutAppointment.propTypes = {
+  due: PropTypes.number,
 };

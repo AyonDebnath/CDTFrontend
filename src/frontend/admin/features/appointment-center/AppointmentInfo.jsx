@@ -47,7 +47,7 @@ export default function AppointmentInfo({ appDat }) {
         "PATCH",
         JSON.stringify({
           status: "ADMIN CONFIRMED",
-          alertText: "Appointment Confirmed By Admin",
+          alertText: "Payment Due",
         }),
         {
           "Content-Type": "application/json",
@@ -125,15 +125,17 @@ export default function AppointmentInfo({ appDat }) {
                             </div>
                           </div>
                         </td>
-                        <td className="owner text-center">{elem.startTime}</td>
+                        <td className="owner text-center">{elem.date}</td>
                         <td className="industry_type text-center">
-                          {elem.endTime}
+                          {elem.startTime}
                         </td>
                         <td className="d-flex justify-content-center ">
                           <h5>
                             <span
                               className={`badge mt-2 ${
-                                elem.status === "ADMIN CONFIRMED"
+                                elem.status === "ADMIN CONFIRMED" ||
+                                elem.status === "PAID AND CONFIRMED" ||
+                                elem.status === "USER CONFIRMED"
                                   ? "bg-success-subtle text-success"
                                   : "bg-danger-subtle text-danger"
                               }`}
@@ -143,7 +145,9 @@ export default function AppointmentInfo({ appDat }) {
                           </h5>
                         </td>
                         <td>
-                          {elem.status === "ADMIN CONFIRMED" ? (
+                          {elem.status === "ADMIN CONFIRMED" ||
+                          elem.status === "PAID AND CONFIRMED" ||
+                          elem.status === "USER CONFIRMED" ? (
                             <ul className="d-flex justify-content-around mt-2">
                               <span className="badge bg-success-subtle action-btn">
                                 <IoIosEye
@@ -165,7 +169,13 @@ export default function AppointmentInfo({ appDat }) {
                                   }}
                                 />
                               </span> */}
-                              <span className="badge bg-danger-subtle action-btn">
+                              <button
+                                className="btn  badge bg-danger-subtle action-btn"
+                                disabled={
+                                  elem.status === "USER CONFIRMED" ||
+                                  elem.paymentStatus === "PAID"
+                                }
+                              >
                                 <MdDeleteForever
                                   className="text-danger"
                                   style={{ fontSize: "23px" }}
@@ -174,7 +184,7 @@ export default function AppointmentInfo({ appDat }) {
                                     setCurApp(elem);
                                   }}
                                 />
-                              </span>
+                              </button>
                             </ul>
                           ) : (
                             <ul className="d-flex justify-content-around mt-2">
@@ -199,7 +209,7 @@ export default function AppointmentInfo({ appDat }) {
                                   }}
                                 />
                               </span>
-                              <span className="badge bg-danger-subtle action-btn">
+                              <button className="btn  badge bg-danger-subtle action-btn">
                                 <MdCancel
                                   className="text-danger"
                                   style={{ fontSize: "23px" }}
@@ -208,7 +218,7 @@ export default function AppointmentInfo({ appDat }) {
                                     setCurApp(elem);
                                   }}
                                 />
-                              </span>
+                              </button>
                             </ul>
                           )}
                         </td>

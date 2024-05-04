@@ -1,18 +1,25 @@
 import PageTitle from "../features/user-body/PageTitle";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Modal, ModalFooter } from "reactstrap";
 
 import ErrorModal from "../../shared/elements/ErrorModal";
+import { Link } from "react-router-dom";
 import { FadeLoader } from "react-spinners";
+import { AuthContext } from "../../shared/context/auth-context";
+import { ShowContext } from "../../shared/context/show-context";
+import Payment from "../features/modals/Payment";
 
 export default function AppointmentHistory() {
   const { isLoading, sendRequest, error, clearError } = useHttpClient();
   const [appData, setAppData] = useState();
   const userID = useParams().uid;
+  const auth = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [modalApp, setModalApp] = useState();
+
+  const show = useContext(ShowContext);
 
   const toggle = () => {
     setModal(!modal);
@@ -53,6 +60,44 @@ export default function AppointmentHistory() {
     }
   }
 
+  const handleDelete = async (appID) => {
+    try {
+      await sendRequest(
+        `${
+          import.meta.env.VITE_SERVER_NAME
+        }api/dashboard/appointment/delete/${appID}`,
+        "DELETE",
+        null,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleConfirm = async (appID) => {
+    try {
+      await sendRequest(
+        `${
+          import.meta.env.VITE_SERVER_NAME
+        }api/dashboard/appointment/status/${appID}`,
+        "PATCH",
+
+        JSON.stringify({
+          status: "USER CONFIRMED",
+        }),
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <ErrorModal error={error} onClear={errorHandler} />
@@ -87,7 +132,10 @@ export default function AppointmentHistory() {
                           <th scope="col">Name</th>
                           <th scope="col">Date</th>
                           <th scope="col">Status</th>
-                          <th scope="col">Action</th>
+                          <th scope="col" className="text-center">
+                            Action
+                          </th>
+                          <th scope="col"> Next Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -111,16 +159,69 @@ export default function AppointmentHistory() {
                                 </span>
                               </td>
                               <td>
-                                <button
-                                  onClick={() => {
-                                    setModalApp(elem);
-                                    toggle();
-                                  }}
-                                  type="button"
-                                  className="btn btn-sm btn-success"
-                                >
-                                  View Appointment
-                                </button>
+                                <div className="container">
+                                  <div className="row">
+                                    <div className="col-5">
+                                      {" "}
+                                      <button
+                                        disabled={elem.status === "EXPIRED"}
+                                        onClick={() => {
+                                          setModalApp(elem);
+                                          toggle();
+                                        }}
+                                        type="button"
+                                        className="btn btn-sm btn-success"
+                                      >
+                                        View Appointment
+                                      </button>
+                                    </div>
+                                    <div className="col-2"></div>
+                                    <div className="col-5">
+                                      <button
+                                        disabled={
+                                          elem.status ===
+                                            "PAID AND CONFIRMED" ||
+                                          elem.paymentStatus === "PAID"
+                                        }
+                                        onClick={() => {
+                                          handleDelete(elem.id);
+                                        }}
+                                        type="button"
+                                        className="btn btn-sm btn-danger"
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                {" "}
+                                {elem.status === "ADMIN CONFIRMED" ? (
+                                  <button
+                                    onClick={() => {
+                                      show.showToggler(true);
+                                    }}
+                                    type="button"
+                                    className="btn btn-sm btn-danger"
+                                  >
+                                    Pay
+                                  </button>
+                                ) : (
+                                  <button
+                                    disabled={
+                                      elem.status === "USER CONFIRMED" ||
+                                      elem.status === "PENDING"
+                                    }
+                                    onClick={() => {
+                                      handleConfirm(elem.id);
+                                    }}
+                                    type="button"
+                                    className="btn btn-sm btn-warning"
+                                  >
+                                    Confirm
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           );
@@ -203,15 +304,28 @@ export default function AppointmentHistory() {
                     <tr>
                       <td>Payment Confirmation</td>
                       <td className="text-danger">
-                        <button
-                          data-bs-toggle="modal"
-                          data-bs-target="#payModal"
-                          type="button"
-                          className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
-                        >
-                          <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
-                          {modalApp?.paymentStatus}
-                        </button>
+                        {modalApp?.paymentStatus === "UNPAID" ? (
+                          <button
+                            disabled={modalApp.status === "PENDING"}
+                            type="button"
+                            className="btn btn-danger btn-label waves-effect waves-light rounded-pill"
+                          >
+                            <i className="ri-file-warning-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                            {modalApp?.paymentStatus}
+                          </button>
+                        ) : (
+                          <Link
+                            to={`/user-payment-history/${modalApp?.userId}`}
+                          >
+                            <button
+                              type="button"
+                              className="btn btn-success btn-label waves-effect waves-light rounded-pill"
+                            >
+                              <i className="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                              {modalApp?.paymentStatus}
+                            </button>
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   </tbody>
@@ -226,6 +340,7 @@ export default function AppointmentHistory() {
               </button>
             </ModalFooter>
           </Modal>
+          <Payment />
         </>
       )}
     </>

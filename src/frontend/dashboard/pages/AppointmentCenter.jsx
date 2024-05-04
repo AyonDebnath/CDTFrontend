@@ -22,7 +22,9 @@ export default function AppointmentCenter() {
             auth.userId
           }`
         );
-        handleAppData(responseData.appointment);
+        responseData.appointment?.length > 0
+          ? handleAppData(responseData.appointment)
+          : setShowApp(true);
       } catch (err) {
         console.log(err);
       }
@@ -38,6 +40,7 @@ export default function AppointmentCenter() {
         }
 
         if (count >= 2) {
+          console.log("here");
           setShowApp(false);
         } else {
           setShowApp(true);

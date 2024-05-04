@@ -1,6 +1,6 @@
 import Input from "../../../home/elements/form-elements/input";
 import useForm from "../../../shared/hooks/form-hook";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import ErrorModal from "../../../shared/elements/ErrorModal";
 import { FadeLoader } from "react-spinners";
@@ -10,11 +10,24 @@ import AppointmentDateTime from "../../form-elements/AppointmentDateTime";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { DateContext } from "../../context/date-context";
+import { PaymentDetailsContext } from "../../context/pay-details.context";
+
 export default function AppointmentForm() {
-  const { isLoading, error, sendRequest, clearError, isSuccess, setIsSucess } =
-    useHttpClient();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const [due, setDue] = useState();
+  const [paid, setPaid] = useState();
+  const [paymentStatus, setPaymentStatus] = useState();
+
+  const payDetToggler = (due, paid, paymentStatus) => {
+    setDue(due);
+    setPaid(paid);
+    setPaymentStatus(paymentStatus);
+  };
 
   const userID = useParams().uid;
+  const dates = useContext(DateContext);
 
   const navigate = useNavigate();
 
@@ -60,6 +73,7 @@ export default function AppointmentForm() {
 
   async function submitHandler(event) {
     event.preventDefault();
+
     const appDate = formState.inputs.dateTime.value[0];
     const startTime = formState.inputs.dateTime.value[2];
     const endTime = formState.inputs.dateTime.value[1];
@@ -69,6 +83,16 @@ export default function AppointmentForm() {
 
     try {
       const formData = new FormData();
+
+      if (paid && paymentStatus != "N/A") {
+        formData.append("paymentStatus", paymentStatus);
+        formData.append("amountPaid", due);
+        formData.append("due", "0");
+      } else {
+        formData.append("paymentStatus", "UNPAID");
+        formData.append("amountPaid", "0");
+        formData.append("due", amount);
+      }
 
       formData.append("name", userData?.fname + " " + userData?.lname);
       formData.append("number", userData?.number);
@@ -86,17 +110,15 @@ export default function AppointmentForm() {
       formData.append("startTime", startTime);
       formData.append("endTime", endTime);
       formData.append("duration", duration);
-      formData.append("paymentStatus", "UNPAID");
       formData.append("interacNum", "N/A");
-      formData.append("amountPaid", "0");
       formData.append(
         "courseName",
         userData.activeCourse ? userData.activeCourse : "Single Lesson"
       );
-      formData.append("due", amount);
       formData.append("completed", "NO");
       formData.append("appName", "Lesson" + appDate);
       formData.append("alertText", "Awaiting Admin Confirmation");
+      formData.append("paymentDate", dates.value);
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/home/appointment/${userID}`,
         "POST",
@@ -129,74 +151,91 @@ export default function AppointmentForm() {
           color="#f43e18"
         />
       )}
-      <div className="row">
-        <div className="col-lg-3"></div>
-        <div className="col-lg-6 col-12">
-          <div className="card">
-            <div className="card-header">
-              <h4>Make an Appointment</h4>
-            </div>
-            <div className="card-body">
-              {/* <!-- Input with Placeholder --> */}
-              <form onSubmit={submitHandler}>
-                <div className="row g-3">
-                  <div className="form-floating">
-                    <Input
-                      id="street"
-                      elem="input"
-                      type="text"
-                      placeholder="Please Enter Pickup Address"
-                      className="form-control"
-                      errorText="Please Enter a Valid Street Name"
-                      validator={[VALIDATOR_REQUIRE()]}
-                      onInput={inputHandler}
-                    />
-                    <label htmlFor="street">Street Address</label>
-                  </div>
-                  <div className="form-floating">
-                    <Input
-                      id="city"
-                      elem="input"
-                      type="text"
-                      placeholder="Please Enter the City Name"
-                      className="form-control"
-                      errorText="Please Enter a Valid City Name"
-                      onInput={inputHandler}
-                      validator={[VALIDATOR_REQUIRE()]}
-                    />
-                    <label htmlFor="city">City</label>
-                  </div>
-                  <div className="form-floating">
-                    <Input
-                      elem="input"
-                      id="zipCode"
-                      type="text"
-                      className="form-control"
-                      placeholder="Please Enter a Valid Zip Code"
-                      validator={[VALIDATOR_REQUIRE()]}
-                      onInput={inputHandler}
-                    />
-                    <label htmlFor="zipCode">Zipcode</label>
-                  </div>
-                  <AppointmentDateTime id="dateTime" onInput={inputHandler} />
+      {
+        <PaymentDetailsContext.Provider
+          value={{
+            due: due,
+            paid: paid,
+            paymentStatus: paymentStatus,
+            paidDets: payDetToggler,
+          }}
+        >
+          <div className="row">
+            <div className="col-lg-3"></div>
+            <div className="col-lg-6 col-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Make an Appointment</h4>
                 </div>
-                <div className="col-lg-12">
-                  <div className="text-end">
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      disabled={!formState.isValid}
-                    >
-                      Submit
-                    </button>
-                  </div>
+                <div className="card-body">
+                  {/* <!-- Input with Placeholder --> */}
+                  <form onSubmit={submitHandler}>
+                    <div className="row g-3">
+                      <div className="form-floating">
+                        <Input
+                          id="street"
+                          elem="input"
+                          type="text"
+                          placeholder="Please Enter Pickup Address"
+                          className="form-control"
+                          errorText="Please Enter a Valid Street Name"
+                          validator={[VALIDATOR_REQUIRE()]}
+                          onInput={inputHandler}
+                        />
+                        <label htmlFor="street">Street Address</label>
+                      </div>
+                      <div className="form-floating">
+                        <Input
+                          id="city"
+                          elem="input"
+                          type="text"
+                          placeholder="Please Enter the City Name"
+                          className="form-control"
+                          errorText="Please Enter a Valid City Name"
+                          onInput={inputHandler}
+                          validator={[VALIDATOR_REQUIRE()]}
+                        />
+                        <label htmlFor="city">City</label>
+                      </div>
+                      <div className="form-floating">
+                        <Input
+                          elem="input"
+                          id="zipCode"
+                          type="text"
+                          className="form-control"
+                          placeholder="Please Enter a Valid Zip Code"
+                          validator={[VALIDATOR_REQUIRE()]}
+                          onInput={inputHandler}
+                        />
+                        <label htmlFor="zipCode">Zipcode</label>
+                      </div>
+                      {userData && (
+                        <AppointmentDateTime
+                          id="dateTime"
+                          user={userData}
+                          onInput={inputHandler}
+                        />
+                      )}
+                    </div>
+                    <div className="col-lg-12">
+                      <div className="text-end">
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          disabled={!formState.isValid || !paid}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
             </div>
+            <div className="col-lg-3"></div>
           </div>
-        </div>
-        <div className="col-lg-3"></div>
-      </div>
+        </PaymentDetailsContext.Provider>
+      }
     </>
   );
 }
