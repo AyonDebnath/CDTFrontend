@@ -30,11 +30,7 @@ export default function CourseProgress() {
                     Completed
                   </td>
                   <td>
-                    <button
-                      onClick="location.href='appointment.html'"
-                      className="btn-sm btn-outline-success btn"
-                      disabled
-                    >
+                    <button className="btn-sm btn-outline-success btn" disabled>
                       Book Now
                     </button>
                   </td>
@@ -66,11 +62,7 @@ export default function CourseProgress() {
                     Booked
                   </td>
                   <td>
-                    <button
-                      onClick="location.href='appointment.html'"
-                      className="btn-sm btn-outline-success btn"
-                      disabled
-                    >
+                    <button className="btn-sm btn-outline-success btn" disabled>
                       Book Now
                     </button>
                   </td>
@@ -136,11 +128,7 @@ export default function CourseProgress() {
                     Unbooked
                   </td>
                   <td>
-                    <button
-                      onClick="location.href='appointment.html'"
-                      className="btn-sm btn-outline-success btn"
-                      disabled
-                    >
+                    <button className="btn-sm btn-outline-success btn" disabled>
                       Book Now
                     </button>
                   </td>

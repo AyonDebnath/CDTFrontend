@@ -29,12 +29,13 @@ export default function Input({
   validator,
   id,
   val,
+  numVal,
   valid,
   onInput = () => {},
   onType = () => {},
 }) {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: val || "",
+    value: val || numVal || "",
     isTouched: false,
     isValid: valid || false,
   });
@@ -109,4 +110,5 @@ Input.propTypes = {
   val: PropTypes.string,
   valid: PropTypes.bool,
   onType: PropTypes.func,
+  numVal: PropTypes.number,
 };

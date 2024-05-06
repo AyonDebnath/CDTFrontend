@@ -12,12 +12,14 @@ import { AuthContext } from "../../../shared/context/auth-context";
 import CheckoutAppointment from "../../form-elements/CheckoutAppointment";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
 export default function AppointmentPay({ userData, amount }) {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [clientSecret, setClientSecret] = useState("");
 
   const pay = useContext(PaymentModalContext);
+  console.log(pay);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,8 +27,8 @@ export default function AppointmentPay({ userData, amount }) {
         const formData = new FormData();
 
         formData.append("amount", parseInt(amount) * 100);
-        formData.append("name", userData.fname + " " + userData.lname);
-        formData.append("email", userData.email);
+        formData.append("name", userData?.fname + " " + userData?.lname);
+        formData.append("email", userData?.email);
         await fetch(
           `${
             import.meta.env.VITE_SERVER_NAME

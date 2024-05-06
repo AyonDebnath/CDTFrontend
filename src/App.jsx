@@ -26,6 +26,9 @@ import UserApprove from "./frontend/admin/pages/UserApprove";
 import AdminCreate from "./frontend/admin/pages/AdminCreate";
 import AdminManage from "./frontend/admin/pages/AdminManage";
 import AppManage from "./frontend/admin/pages/AppointmentManage";
+import CourseCreate from "./frontend/admin/pages/CourseCreate";
+import CourseInfo from "./frontend/admin/pages/CourseInfo";
+import EditCourse from "./frontend/admin/pages/EditCourseDetails";
 
 function App() {
   const [token, setToken] = useState();
@@ -224,6 +227,18 @@ function App() {
         <Route
           path="/admin/appointment-manage/:aid"
           element={<AppManage />}
+        ></Route>
+        <Route
+          path="/admin/create-course/:aid"
+          element={<CourseCreate />}
+        ></Route>
+        <Route
+          path="/admin/manage-course/:aid"
+          element={<CourseInfo />}
+        ></Route>
+        <Route
+          path="/admin/edit-course/:aid/:cid"
+          element={<EditCourse />}
         ></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </>

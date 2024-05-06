@@ -11,7 +11,6 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { PaymentModalContext } from "../context/payment-context";
 
 import { PaymentDetailsContext } from "../context/pay-details.context";
-import { SiTruenas } from "react-icons/si";
 
 export default function CheckoutAppointment({ due }) {
   const stripe = useStripe();

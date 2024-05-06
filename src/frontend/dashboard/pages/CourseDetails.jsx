@@ -1,3 +1,4 @@
+import AvailableCourses from "../features/course/AvailableCourses";
 import CourseAssessment from "../features/course/CourseAssessment";
 import CourseProgress from "../features/course/CourseProgress";
 import PreferredPackage from "../features/course/PreferredPackage";
@@ -10,6 +11,7 @@ export default function CourseDetails() {
       <div className="row">
         <PreferredPackage />
         <CourseAssessment />
+        <AvailableCourses />
         <CourseProgress />
       </div>
     </>

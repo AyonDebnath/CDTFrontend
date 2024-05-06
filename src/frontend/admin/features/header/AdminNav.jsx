@@ -153,13 +153,41 @@ export default function AdminNav() {
               </div>
             </li>
             <li className="nav-item">
-              <NavLink
-                className="nav-link menu-link"
-                to={`/user-appointment/${auth.adminId}`}
+              <a
+                href="#sidebarCourse"
+                className="nav-link"
+                data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="sidebarApp"
+                data-key="t-app"
               >
-                <i className="ri-calendar-schedule-line"></i>
-                <span data-key="settings">Appointment Center</span>
-              </NavLink>
+                <MdEditCalendar /> Course Center
+              </a>
+              <div className="collapse menu-dropdown" id="sidebarCourse">
+                <ul className="nav nav-sm flex-column">
+                  <li className="nav-item">
+                    <Link
+                      to={`/admin/manage-course/${auth.adminId}`}
+                      className="nav-link"
+                      data-key="t-main-calender"
+                    >
+                      {" "}
+                      Manage Courses{" "}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to={`/admin/create-course/${auth.adminId}`}
+                      className="nav-link"
+                      data-key="t-main-calender"
+                    >
+                      {" "}
+                      Create Course{" "}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </li>
             <li className="nav-item">
               <NavLink
