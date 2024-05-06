@@ -4,6 +4,8 @@ import { AdminAuthContext } from "../../../shared/context/admin-auth-context";
 import { Link, NavLink } from "react-router-dom";
 import { FaHouseUser } from "react-icons/fa";
 import { MdAdminPanelSettings, MdEditCalendar } from "react-icons/md";
+import { GiBookCover } from "react-icons/gi";
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 
 export default function AdminNav() {
   const wind = useContext(WindowContext);
@@ -162,7 +164,7 @@ export default function AdminNav() {
                 aria-controls="sidebarApp"
                 data-key="t-app"
               >
-                <MdEditCalendar /> Course Center
+                <GiBookCover /> Course Center
               </a>
               <div className="collapse menu-dropdown" id="sidebarCourse">
                 <ul className="nav nav-sm flex-column">
@@ -190,31 +192,41 @@ export default function AdminNav() {
               </div>
             </li>
             <li className="nav-item">
-              <NavLink
-                className="nav-link menu-link"
-                to={`/user-course-details/${auth.adminId}`}
+              <a
+                href="#sidebarAssessment"
+                className="nav-link"
+                data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="sidebarApp"
+                data-key="t-app"
               >
-                <i className="ri-graduation-cap-line"></i>
-                <span data-key="settings">Course Details</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className="nav-link menu-link"
-                to={`/user-payment-history/${auth.adminId}`}
-              >
-                <i className="ri-history-line"></i>
-                <span data-key="settings">Payment History</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className="nav-link menu-link"
-                to={`/user-appointment-history/${auth.adminId}`}
-              >
-                <i className="ri-history-line"></i>
-                <span data-key="settings">Appointment History</span>
-              </NavLink>
+                <LiaChalkboardTeacherSolid /> Instructor Center
+              </a>
+              <div className="collapse menu-dropdown" id="sidebarAssessment">
+                <ul className="nav nav-sm flex-column">
+                  <li className="nav-item">
+                    <Link
+                      to={`/admin/start-assessment/${auth.adminId}`}
+                      className="nav-link"
+                      data-key="t-main-calender"
+                    >
+                      {" "}
+                      Start Assessment{" "}
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to={`/admin/history-assessment/${auth.adminId}`}
+                      className="nav-link"
+                      data-key="t-main-calender"
+                    >
+                      {" "}
+                      Assessment History{" "}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </li>
           </ul>
         </div>

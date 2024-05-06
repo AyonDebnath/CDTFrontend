@@ -40,7 +40,6 @@ export default function AppointmentCenter() {
         }
 
         if (count >= 2) {
-          console.log("here");
           setShowApp(false);
         } else {
           setShowApp(true);

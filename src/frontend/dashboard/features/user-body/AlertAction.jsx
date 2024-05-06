@@ -8,12 +8,16 @@ import Appointment from "../modals/Appointment";
 
 import React from "react";
 import { ShowContext } from "../../../shared/context/show-context";
+import { AssessmentModalContext } from "../../context/assessment-modal-context";
+import Score from "../modals/Score";
 
 export default function AlerAction() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [appData, setAppData] = useState();
   const [elementData, setElementData] = useState();
   const [alerts, setAlerts] = useState();
+  const [ass, setAss] = useState();
+  const [appID, setAppID] = useState();
   const userID = useParams().uid;
   const show = useContext(ShowContext);
 
@@ -23,6 +27,10 @@ export default function AlerAction() {
   const infoToggle = (val, elemData) => {
     setInfoShow(val);
     setElementData(elemData);
+  };
+  const assToggler = (val, appId) => {
+    setAss(val);
+    setAppID(appId);
   };
 
   useEffect(() => {
@@ -90,17 +98,12 @@ export default function AlerAction() {
             alertBgColor = "bg-success-subtle ";
             alertColor = "text-success";
             elemBtn = (
-              <div className="col-lg-2 col-6">
-                <button
-                  data-bs-toggle="modal"
-                  data-bs-target="#scoreModal"
-                  className="btn btn-success btn-label"
-                >
-                  <i className="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i>
-                  See Score
-                </button>
-              </div>
+              <>
+                <i className="ri-check-double-line label-icon align-middle rounded-pill fs-16 me-2"></i>
+                view
+              </>
             );
+            elemBtnClass = "btn-success";
           } else if (elem.alerts[lengt - 1].alertText === "Payment Received") {
             alertBgColor = "bg-success-subtle ";
             alertColor = "text-success";
@@ -113,6 +116,7 @@ export default function AlerAction() {
             elemBtnClass = "btn-success";
           }
           const { alertText, time, date, _id } = elem.alerts[lengt - 1];
+          const { id } = elem;
 
           newAlerts.push({
             alertText: alertText,
@@ -122,6 +126,7 @@ export default function AlerAction() {
             txtColor: alertColor,
             elemButton: elemBtn,
             id: _id,
+            appid: id,
             elementDet: elem,
             elemBtnClass: elemBtnClass,
           });
@@ -160,88 +165,100 @@ export default function AlerAction() {
         <InfoModalContext.Provider
           value={{ show: infoShow, showToggler: infoToggle }}
         >
-          <div className="col-xxl-8">
-            <div className="card">
-              <div className="card-header border-0">
-                <div></div>
-                <h4 className="card-title mb-0">Alerts</h4>
-              </div>
-              {/* <!-- end cardheader --> */}
-              {alerts?.length > 0 ? (
-                <div className="card-body pt-0">
-                  {alerts?.map((elem) => {
-                    return (
-                      <React.Fragment key={elem.id}>
-                        <div className="mini-stats-wid d-flex align-items-center mt-3">
-                          <div className="flex-shrink-0 avatar-sm">
-                            <span
-                              className={`${elem.bgColor} ${elem.txtColor} alert-span`}
+          <AssessmentModalContext.Provider
+            value={{ show: ass, showToggler: assToggler }}
+          >
+            <div className="col-xxl-8">
+              <div className="card">
+                <div className="card-header border-0">
+                  <div></div>
+                  <h4 className="card-title mb-0">Alerts</h4>
+                </div>
+                {/* <!-- end cardheader --> */}
+                {alerts?.length > 0 ? (
+                  <div className="card-body pt-0">
+                    {alerts?.map((elem) => {
+                      return (
+                        <React.Fragment key={elem.id}>
+                          <div className="mini-stats-wid d-flex align-items-center mt-3">
+                            <div className="flex-shrink-0 avatar-sm">
+                              <span
+                                className={`${elem.bgColor} ${elem.txtColor} alert-span`}
+                              >
+                                {elem.date.length > 1
+                                  ? elem.date
+                                  : 0 + elem.date}
+                              </span>
+                            </div>
+                            <div
+                              className={`alert-div ${elem.bgColor} container`}
                             >
-                              {elem.date.length > 1 ? elem.date : 0 + elem.date}
-                            </span>
-                          </div>
-                          <div
-                            className={`alert-div ${elem.bgColor} container`}
-                          >
-                            <div className="row">
-                              <div className="col-lg-5 col-6">
-                                <h4
-                                  className={`mb-1 ${elem.txtColor} alert-text`}
-                                >
-                                  {elem.alertText}
-                                </h4>
-                              </div>
-                              <div className="col-lg-2 col-6">
-                                <button
-                                  onClick={() => {
-                                    if (
-                                      elem.alertText ===
-                                      "Awaiting Admin Confirmation"
-                                    ) {
-                                      infoToggle(true, elem.elementDet);
-                                    } else if (
-                                      elem.alertText === "Payment Due"
-                                    ) {
-                                      show.showToggler(true);
-                                    } else if (
-                                      elem.alertText === "Payment Received"
-                                    ) {
-                                      navigate(
-                                        `/user-payment-history/${userID}`
-                                      );
-                                    }
-                                  }}
-                                  className={`btn ${elem.elemBtnClass} btn-label`}
-                                >
-                                  {elem.elemButton}
-                                </button>
-                              </div>
-                              <div className="col-lg-4 text-right col-4 large-text">
-                                <p className={`mb-0 ${elem.txtColor}`}>
-                                  {elem.time}
-                                </p>
+                              <div className="row">
+                                <div className="col-lg-5 col-6">
+                                  <h4
+                                    className={`mb-1 ${elem.txtColor} alert-text`}
+                                  >
+                                    {elem.alertText}
+                                  </h4>
+                                </div>
+                                <div className="col-lg-2 col-6">
+                                  <button
+                                    onClick={() => {
+                                      if (
+                                        elem.alertText ===
+                                        "Awaiting Admin Confirmation"
+                                      ) {
+                                        infoToggle(true, elem.elementDet);
+                                      } else if (
+                                        elem.alertText === "Payment Due"
+                                      ) {
+                                        show.showToggler(true);
+                                      } else if (
+                                        elem.alertText === "Payment Received"
+                                      ) {
+                                        navigate(
+                                          `/user-payment-history/${userID}`
+                                        );
+                                      } else if (
+                                        elem.alertText ===
+                                        "Assessment Score Updated"
+                                      ) {
+                                        assToggler(true, elem.appid);
+                                      }
+                                    }}
+                                    className={`btn ${elem.elemBtnClass} btn-label`}
+                                  >
+                                    {elem.elemButton}
+                                  </button>
+                                </div>
+                                <div className="col-lg-4 text-right col-4 large-text">
+                                  <p className={`mb-0 ${elem.txtColor}`}>
+                                    {elem.time}
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </React.Fragment>
-                    );
-                  })}
-                  {/* <!-- end --> */}
-                </div>
-              ) : (
-                <div className="card-body pt-0">
-                  {/* <!-- end --> */}
-                  <h4 className="text-center text-success">
-                    No alerts to show
-                  </h4>
-                </div>
-              )}
-              {/* <!-- end cardbody --> */}
+                        </React.Fragment>
+                      );
+                    })}
+                    {/* <!-- end --> */}
+                  </div>
+                ) : (
+                  <div className="card-body pt-0">
+                    {/* <!-- end --> */}
+                    <h4 className="text-center text-success">
+                      No alerts to show
+                    </h4>
+                  </div>
+                )}
+                {/* <!-- end cardbody --> */}
+              </div>
+              {/* <!-- end card --> */}
             </div>
-            {/* <!-- end card --> */}
-          </div>
-          <Appointment appData={elementData} />
+            {appID && <Score appID={appID} />}
+            <Appointment appData={elementData} />
+          </AssessmentModalContext.Provider>
         </InfoModalContext.Provider>
       )}
     </>

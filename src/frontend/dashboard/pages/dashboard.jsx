@@ -41,7 +41,7 @@ export default function Dashboard() {
         let curTime = curD.getHours() + 1;
         let dateArr = app.date.split("-");
         let appDay = dateArr[2];
-        let appTime = getIntValue(app.startTime);
+        let appTime = getIntValue(app.startTime) + 2;
         if (parseInt(appDay) < today) {
           try {
             await fetch(
@@ -64,7 +64,11 @@ export default function Dashboard() {
           } catch (err) {
             console.log(err);
           }
-        } else if (parseInt(appDay) === today && appTime < curTime) {
+        } else if (
+          parseInt(appDay) === today &&
+          appTime < curTime &&
+          app.status != "COMPLETED"
+        ) {
           try {
             await fetch(
               `${

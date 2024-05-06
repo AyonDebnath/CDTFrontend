@@ -29,6 +29,8 @@ import AppManage from "./frontend/admin/pages/AppointmentManage";
 import CourseCreate from "./frontend/admin/pages/CourseCreate";
 import CourseInfo from "./frontend/admin/pages/CourseInfo";
 import EditCourse from "./frontend/admin/pages/EditCourseDetails";
+import AssessmentStart from "./frontend/admin/pages/AssessmentStart";
+import AssessmentEvaluate from "./frontend/admin/pages/AssessmentEvaluation";
 
 function App() {
   const [token, setToken] = useState();
@@ -239,6 +241,14 @@ function App() {
         <Route
           path="/admin/edit-course/:aid/:cid"
           element={<EditCourse />}
+        ></Route>
+        <Route
+          path="/admin/start-assessment/:aid"
+          element={<AssessmentStart />}
+        ></Route>
+        <Route
+          path="/admin/evaluate/:appid/:uid"
+          element={<AssessmentEvaluate />}
         ></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </>
