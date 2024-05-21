@@ -81,9 +81,15 @@ export default function CheckoutForm({ due, appId, userId }) {
   return (
     <form onSubmit={handleSubmit} className="px-4">
       <PaymentElement options={paymentElementOptions} />
-      <button type="submit" disabled={!stripe || !elements}>
-        Pay
-      </button>
+      <div className="d-flex justify-content-center">
+        <button
+          className="btn btn-success btn-lg mt-2"
+          type="submit"
+          disabled={!stripe || !elements}
+        >
+          Pay
+        </button>
+      </div>
       {/* Show error message to your customers */}
       {errorMessage && <div>{errorMessage}</div>}
     </form>

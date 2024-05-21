@@ -53,6 +53,41 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
 
   const payConfig = useContext(PaymentDetailsContext);
 
+  const warnings = {
+    war1: (
+      <p>
+        You're paying for an appointment ahead of confirmation due to it being
+        so close to <strong>Today</strong>
+      </p>
+    ),
+    war2: (
+      <p>
+        Being so close to booking day doesn't allow for any{" "}
+        <strong>Refund</strong> or <strong>Cancellation</strong>
+      </p>
+    ),
+    war3: (
+      <p>
+        Please Check the time again before making <strong>Payment</strong> to
+        avoid any issues.
+      </p>
+    ),
+    war4: (
+      <p>
+        If you're here after changing times just go ahead close this modal
+        without payment and proceed with the appointment.
+      </p>
+    ),
+    war5: (
+      <p className="text-danger">DO NOT PAY TWICE UNDER ANY CIRCUMSTANCES.</p>
+    ),
+    war6: (
+      <p className="text-danger">
+        DO NOT GO OUT OF THE APPOINTMENT WINDOW AFTER MAKING PAYMENT
+      </p>
+    ),
+  };
+
   const payToggler = (val) => {
     setPayShow(val);
   };
@@ -467,7 +502,11 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
             />
           </div>
           {user && payAmount && (
-            <AppointmentPay userData={user} amount={payAmount} />
+            <AppointmentPay
+              userData={user}
+              amount={payAmount.toString()}
+              warning={warnings}
+            />
           )}
         </DateContext.Provider>
       </PaymentModalContext.Provider>

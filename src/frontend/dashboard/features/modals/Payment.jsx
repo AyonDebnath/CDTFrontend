@@ -5,7 +5,7 @@ import CheckoutForm from "../../form-elements/CheckoutForm";
 import Selector from "../../../home/elements/form-elements/Selector";
 import useForm from "../../../shared/hooks/form-hook";
 
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import ErrorModal from "../../../shared/elements/ErrorModal";
 import { ShowContext } from "../../../shared/context/show-context";
@@ -16,7 +16,7 @@ import { SelectorContext } from "../../../shared/context/SelectorContext";
 import { AuthContext } from "../../../shared/context/auth-context";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-export default function Payment({ userID }) {
+export default function Payment({ userID, warning }) {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [useApp, setUseApp] = useState();
   const [app, setApp] = useState([]);
@@ -25,7 +25,10 @@ export default function Payment({ userID }) {
   const [selectorVal, setSelectorVal] = useState();
   const auth = useContext(AuthContext);
   const [clientSecret, setClientSecret] = useState("");
+  const warnings = Object.entries(warning);
 
+  const [visi, setVisi] = useState(false);
+  const [checked, setChecked] = useState(false);
   async function valChange(val) {
     if (val !== "Invalid") {
       try {
@@ -169,7 +172,53 @@ export default function Payment({ userID }) {
               </div>
               <div className="modal-body">
                 <div className="container">
-                  <div className="col-12">
+                  {warnings && (
+                    <>
+                      <div className={`mt-5 ${visi ? "destroy" : ""}`}>
+                        {warnings.map((elem) => {
+                          return (
+                            <React.Fragment key={warnings.indexOf(elem)}>
+                              <div className="mt-2 text-center fs-18">
+                                {elem[1]}
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+                        <div className="d-flex flex-column align-items-center">
+                          <div className="form-check form-check-success mt-3">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="formCheck8"
+                              onChange={() => {
+                                setChecked(!checked);
+                              }}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="formCheck8"
+                            >
+                              I have read, understood and agree to comply with
+                              all the instruction lined out above
+                            </label>
+                          </div>
+                          <div>
+                            <button
+                              className="btn btn-lg btn-warning mt-2"
+                              disabled={!checked}
+                              onClick={() => {
+                                setVisi(!visi);
+                              }}
+                            >
+                              Confirm
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className={`col-12 ${visi ? "" : "destroy"}`}>
                     <label className="visually-hidden" htmlFor="Appointment">
                       Appointment
                     </label>
@@ -269,4 +318,5 @@ export default function Payment({ userID }) {
 
 Payment.propTypes = {
   userID: PropTypes.string,
+  warning: PropTypes.object,
 };

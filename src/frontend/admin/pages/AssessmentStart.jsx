@@ -18,7 +18,7 @@ export default function AssessmentStart() {
         const responseData = await sendRequest(
           `${
             import.meta.env.VITE_SERVER_NAME
-          }api/dashboard/appointment/${today}`
+          }api/dashboard/appointment/2024-05-11`
         );
         responseData.appointment?.length > 0 &&
           handleAppData(responseData.appointment);
@@ -35,8 +35,7 @@ export default function AssessmentStart() {
     for (const app of appDat) {
       if (
         app.status === "PAID AND CONFIRMED" ||
-        app.status === "USER CONFIRMED" ||
-        app.status === "EXPIRED"
+        app.status === "USER CONFIRMED"
       ) {
         apps.push(app);
       }

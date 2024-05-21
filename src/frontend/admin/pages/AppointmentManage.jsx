@@ -4,28 +4,133 @@ import ErrorModal from "../../shared/elements/ErrorModal";
 import { FadeLoader } from "react-spinners";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import AppointmentInfo from "../features/appointment-center/AppointmentInfo";
+import { AdminAuthContext } from "../../shared/context/admin-auth-context";
+import { useDate } from "../../shared/hooks/date-hook";
 
 export default function AppManage() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [appointmentData, setAppointmentData] = useState();
+  const auth = useContext(AdminAuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await sendRequest(
+        await fetch(
           `${import.meta.env.VITE_SERVER_NAME}api/admin/appointment/all`
-        );
-
-        setAppointmentData(responseData.appointment);
+        ).then(async (r) => {
+          const res = await r.json();
+          setAppointmentData(res.appointment);
+          res?.appointment?.length > 0 && handleAppointment(res.appointment);
+        });
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchData();
-  }, [sendRequest]);
+    const handleAppointment = async (appInfo) => {
+      for (const app of appInfo) {
+        console.log(app.id);
+        let curD = new Date();
+        let today = curD.getDate();
+        let curTime = curD.getHours() + 1;
+        let dateArr = app.date.split("-");
+        let appDay = dateArr[2];
+        let appTime = getIntValue(app.startTime) + 2;
+        if (parseInt(appDay) < today && app.status != "COMPLETED") {
+          try {
+            await fetch(
+              `${
+                import.meta.env.VITE_SERVER_NAME
+              }api/admin/appointment/updateStatus/${app.id}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + auth.adminToken,
+                },
+                body: JSON.stringify({
+                  status: "EXPIRED",
+                  alertText: "Appointment Expired",
+                }),
+              }
+            ).then(async (r) => {
+              const res = await r.json();
+              console.log(res);
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } else if (
+          parseInt(appDay) === today &&
+          appTime < curTime &&
+          app.status != "COMPLETED"
+        ) {
+          try {
+            await fetch(
+              `${
+                import.meta.env.VITE_SERVER_NAME
+              }api/admin/appointment/updateStatus/${app.id}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + auth.adminToken,
+                },
+                body: JSON.stringify({
+                  status: "EXPIRED",
+                  alertText: "Appointment Expired",
+                }),
+              }
+            ).then(async (r) => {
+              const res = await r.json();
+              console.log(res);
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    };
+
+    const getIntValue = (timeVal) => {
+      let timeArr = [];
+
+      if (timeVal.length === 6) {
+        timeArr.push(timeVal.slice(0, 4));
+        timeArr.push(timeVal.slice(4, 6));
+      } else {
+        timeArr.push(timeVal.slice(0, 5));
+        timeArr.push(timeVal.slice(5, 7));
+      }
+
+      let setHour;
+
+      const timeIndi = timeArr[0].split(":");
+
+      if (
+        timeArr[1] === "AM" ||
+        timeArr[0] === "12:00" ||
+        timeArr[0] === "12:30"
+      ) {
+        if (timeIndi[1] === "30") {
+          setHour = parseFloat(timeIndi[0]) + 0.5;
+        } else {
+          setHour = parseFloat(timeIndi[0]);
+        }
+      } else {
+        if (timeIndi[1] === "30") {
+          setHour = parseFloat(timeIndi[0]) + 12.5;
+        } else {
+          setHour = parseFloat(timeIndi[0]) + 12;
+        }
+      }
+
+      return setHour;
+    };
+  }, [auth]);
 
   function errorHandler() {
     clearError();

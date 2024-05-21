@@ -11,10 +11,12 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { PaymentModalContext } from "../context/payment-context";
 
 import { PaymentDetailsContext } from "../context/pay-details.context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
-export default function CheckoutAppointment({ due }) {
+export default function CheckoutAppointment({ due, lesson }) {
   const stripe = useStripe();
   const elements = useElements();
+  const { sendRequest } = useHttpClient();
 
   const auth = useContext(AuthContext);
   const pay = useContext(PaymentDetailsContext);
@@ -56,8 +58,26 @@ export default function CheckoutAppointment({ due }) {
         // details incomplete)
         setErrorMessage(error.message);
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        pay.paidDets(due, true, "PAID");
-        payShow.payToggler(false);
+        if (lesson) {
+          try {
+            const formData = new FormData();
+            formData.append("lessons", lesson);
+            await sendRequest(
+              `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user-lesson/${
+                auth.userId
+              }`,
+              "POST",
+              formData
+            );
+          } catch (err) {
+            console.log(err);
+          }
+
+          payShow.payToggler(false);
+        } else {
+          pay.paidDets(due, true, "PAID");
+          payShow.payToggler(false);
+        }
       }
     } catch (err) {
       console.log(err.message);
@@ -67,9 +87,15 @@ export default function CheckoutAppointment({ due }) {
   return (
     <form className="px-4">
       <PaymentElement options={paymentElementOptions} />
-      <button onClick={handlePaySubmit} disabled={!stripe || !elements}>
-        Pay
-      </button>
+      <div className="d-flex justify-content-center">
+        <button
+          className="btn btn-success btn-lg mt-2"
+          onClick={handlePaySubmit}
+          disabled={!stripe || !elements}
+        >
+          Pay
+        </button>
+      </div>
       {/* Show error message to your customers */}
       {errorMessage && <div>{errorMessage}</div>}
     </form>
@@ -78,4 +104,5 @@ export default function CheckoutAppointment({ due }) {
 
 CheckoutAppointment.propTypes = {
   due: PropTypes.number,
+  lesson: PropTypes.string,
 };

@@ -5,7 +5,6 @@ import Input from "../../../home/elements/form-elements/input";
 import ErrorModal from "../../../shared/elements/ErrorModal";
 import { FadeLoader } from "react-spinners";
 
-import PropTypes from "prop-types";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_REQUIRE,
@@ -153,7 +152,7 @@ export default function ProfileForm(props) {
       formData.append("image", props.profilePhoto);
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user/info/${userID}`,
-        "POST",
+        "PATCH",
         formData
       );
       navigate(`/user-dashboard/${userID}`);
@@ -346,7 +345,7 @@ export default function ProfileForm(props) {
                   className="btn btn-primary"
                   disabled={!formState.isValid}
                 >
-                  Updates
+                  Update
                 </button>
                 <button type="button" className="btn btn-soft-success">
                   Cancel

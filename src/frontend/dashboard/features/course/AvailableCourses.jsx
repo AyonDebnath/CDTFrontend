@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 
 import ErrorModal from "../../../shared/elements/ErrorModal";
@@ -13,6 +13,39 @@ export default function AvailableCourses() {
   const [userData, setUserData] = useState();
   const [pay, setPay] = useState();
   const [amount, setAmount] = useState();
+
+  const warnings = {
+    war1: (
+      <p>
+        You're paying for an <strong>Course</strong>
+      </p>
+    ),
+    war2: (
+      <p>
+        There is no <strong>Refunds</strong> once you attend a lesson.
+      </p>
+    ),
+    war3: (
+      <p>
+        Please Check the details again before making <strong>Payment</strong> to
+        avoid any issues.
+      </p>
+    ),
+    war4: (
+      <p>
+        Please wait <strong>24 Hour</strong> before the course lessons are added
+        to your profile.
+      </p>
+    ),
+    war5: (
+      <p className="text-danger">DO NOT PAY TWICE UNDER ANY CIRCUMSTANCES.</p>
+    ),
+    war6: (
+      <p className="text-danger">
+        DO NOT GO OUT OF THIS MODAL WHILE PROCESSING
+      </p>
+    ),
+  };
 
   const userId = useParams().uid;
 
@@ -102,9 +135,12 @@ export default function AvailableCourses() {
                               </button>
                             </div>
                           </div>
+
                           <AppointmentPay
                             userData={userData}
-                            amount={parseInt(elem.price)}
+                            amount={elem.price}
+                            warning={warnings}
+                            lesson={elem.number}
                           />
                         </div>
                         {/* <!--end col--> */}

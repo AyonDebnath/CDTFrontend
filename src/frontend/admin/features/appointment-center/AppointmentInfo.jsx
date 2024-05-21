@@ -135,7 +135,8 @@ export default function AppointmentInfo({ appDat }) {
                               className={`badge mt-2 ${
                                 elem.status === "ADMIN CONFIRMED" ||
                                 elem.status === "PAID AND CONFIRMED" ||
-                                elem.status === "USER CONFIRMED"
+                                elem.status === "USER CONFIRMED" ||
+                                elem.status === "COMPLETED"
                                   ? "bg-success-subtle text-success"
                                   : "bg-danger-subtle text-danger"
                               }`}
@@ -147,7 +148,9 @@ export default function AppointmentInfo({ appDat }) {
                         <td>
                           {elem.status === "ADMIN CONFIRMED" ||
                           elem.status === "PAID AND CONFIRMED" ||
-                          elem.status === "USER CONFIRMED" ? (
+                          elem.status === "USER CONFIRMED" ||
+                          elem.status === "COMPLETED" ||
+                          elem.status === "EXPIRED" ? (
                             <ul className="d-flex justify-content-around mt-2">
                               <span className="badge bg-success-subtle action-btn">
                                 <IoIosEye

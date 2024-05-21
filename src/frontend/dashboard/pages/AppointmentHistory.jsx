@@ -25,6 +25,39 @@ export default function AppointmentHistory() {
     setModal(!modal);
   };
 
+  const warnings = {
+    war1: (
+      <p>
+        You're paying for an <strong>Appointment</strong>
+      </p>
+    ),
+    war2: (
+      <p>
+        The refund deadline is <strong>24hour</strong> before the appointment
+      </p>
+    ),
+    war3: (
+      <p>
+        Please Check the details again before making <strong>Payment</strong> to
+        avoid any issues.
+      </p>
+    ),
+    war4: (
+      <p>
+        If you are making the payment <strong>24 Hour</strong> before the
+        appointment there won't be an option to refund.
+      </p>
+    ),
+    war5: (
+      <p className="text-danger">DO NOT PAY TWICE UNDER ANY CIRCUMSTANCES.</p>
+    ),
+    war6: (
+      <p className="text-danger">
+        DO NOT GO OUT OF THIS MODAL WHILE PROCESSING
+      </p>
+    ),
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -181,7 +214,8 @@ export default function AppointmentHistory() {
                                         disabled={
                                           elem.status ===
                                             "PAID AND CONFIRMED" ||
-                                          elem.paymentStatus === "PAID"
+                                          elem.paymentStatus === "PAID" ||
+                                          elem.status === "USER CONFIRMED"
                                         }
                                         onClick={() => {
                                           handleDelete(elem.id);
@@ -211,7 +245,8 @@ export default function AppointmentHistory() {
                                   <button
                                     disabled={
                                       elem.status === "USER CONFIRMED" ||
-                                      elem.status === "PENDING"
+                                      elem.status === "PENDING" ||
+                                      elem.status === "EXPIRED"
                                     }
                                     onClick={() => {
                                       handleConfirm(elem.id);
@@ -340,7 +375,7 @@ export default function AppointmentHistory() {
               </button>
             </ModalFooter>
           </Modal>
-          <Payment />
+          <Payment warning={warnings} />
         </>
       )}
     </>
