@@ -62,12 +62,14 @@ export default function CheckoutAppointment({ due, lesson }) {
           try {
             const formData = new FormData();
             formData.append("lessons", lesson);
+
             await sendRequest(
               `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user-lesson/${
                 auth.userId
               }`,
               "POST",
-              formData
+              formData,
+              { Authorization: "Bearer " + auth.token }
             );
           } catch (err) {
             console.log(err);

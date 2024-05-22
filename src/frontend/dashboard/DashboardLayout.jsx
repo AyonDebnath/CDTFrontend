@@ -21,7 +21,9 @@ export default function DashboardLayout() {
         {wind.navVisi && <NavBar />}
         <div
           className={`${wind.navVisi ? "main-content" : "main-content-full"}`}
-          onClick={wind.navSwitch ? wind.visiToggler : () => {}}
+          onClick={() => {
+            wind.navSwitch && wind.visiToggler(false);
+          }}
         >
           <div className="page-content">
             <div className="container-fluid">

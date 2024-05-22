@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DateContext } from "../../context/date-context";
 import { PaymentDetailsContext } from "../../context/pay-details.context";
+import { AuthContext } from "../../../shared/context/auth-context";
 
 export default function AppointmentForm() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -19,6 +20,8 @@ export default function AppointmentForm() {
   const [due, setDue] = useState();
   const [paid, setPaid] = useState();
   const [paymentStatus, setPaymentStatus] = useState();
+
+  const auth = useContext(AuthContext);
 
   const payDetToggler = (due, paid, paymentStatus) => {
     setDue(due);
@@ -73,11 +76,11 @@ export default function AppointmentForm() {
 
   async function submitHandler(event) {
     event.preventDefault();
-
     const appDate = formState.inputs.dateTime.value[0];
     const startTime = formState.inputs.dateTime.value[2];
     const endTime = formState.inputs.dateTime.value[1];
     const duration = formState.inputs.dateTime.value[3];
+    const lesson = formState.inputs.dateTime.value[4];
     const durArr = duration.split(" ");
     const amount = (parseFloat(durArr[0]) * 70).toString();
 
@@ -124,6 +127,21 @@ export default function AppointmentForm() {
         "POST",
         formData
       );
+
+      try {
+        const formData = new FormData();
+        formData.append("lessons", lesson);
+        await sendRequest(
+          `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user-lesson/${
+            auth.userId
+          }`,
+          "POST",
+          formData,
+          { Authorization: "Bearer " + auth.token }
+        );
+      } catch (err) {
+        console.log(err);
+      }
 
       navigate(`/user-appointment-history/${userID}`);
     } catch (err) {

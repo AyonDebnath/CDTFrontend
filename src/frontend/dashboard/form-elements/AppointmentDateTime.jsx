@@ -10,6 +10,7 @@ import { DateContext } from "../context/date-context";
 import { PaymentModalContext } from "../context/payment-context";
 import AppointmentPay from "../features/modals/appointmentPay";
 import { PaymentDetailsContext } from "../context/pay-details.context";
+import { AuthContext } from "../../shared/context/auth-context";
 
 function dateReducer(state, action) {
   switch (action.type) {
@@ -17,7 +18,7 @@ function dateReducer(state, action) {
       return {
         ...state,
         value: action.value,
-        isValid: action.value.length === 4,
+        isValid: action.value.length === 5,
       };
     case "TOUCH":
       return {
@@ -50,38 +51,44 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
   const [payShow, setPayShow] = useState(false);
   const [payToday, setPayToday] = useState(false);
   const [payAmount, setPayAmount] = useState();
+  const [lesson, setLesson] = useState();
 
   const payConfig = useContext(PaymentDetailsContext);
 
   const warnings = {
     war1: (
       <p>
+        You're going to pay<strong className="text-sucess">${payAmount}</strong>
+      </p>
+    ),
+    war2: (
+      <p>
         You're paying for an appointment ahead of confirmation due to it being
         so close to <strong>Today</strong>
       </p>
     ),
-    war2: (
+    war3: (
       <p>
         Being so close to booking day doesn't allow for any{" "}
         <strong>Refund</strong> or <strong>Cancellation</strong>
       </p>
     ),
-    war3: (
+    war4: (
       <p>
         Please Check the time again before making <strong>Payment</strong> to
         avoid any issues.
       </p>
     ),
-    war4: (
+    war5: (
       <p>
         If you're here after changing times just go ahead close this modal
         without payment and proceed with the appointment.
       </p>
     ),
-    war5: (
+    war6: (
       <p className="text-danger">DO NOT PAY TWICE UNDER ANY CIRCUMSTANCES.</p>
     ),
-    war6: (
+    war7: (
       <p className="text-danger">
         DO NOT GO OUT OF THE APPOINTMENT WINDOW AFTER MAKING PAYMENT
       </p>
@@ -362,30 +369,46 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
   }
 
   // After the final data is received from radio form element we set the final start time end time and duration.
-  function handleEnd(event) {
+  async function handleEnd(event) {
     setEndApp(event.target.value);
     let startTime = getIntValue(startApp);
     let endTime = getIntValue(event.target.value);
     let dura;
 
     dura = endTime - startTime;
-    if (payToday === true) {
-      setPayAmount(dura * 70);
+    const paidAmount = parseInt(user.balance);
+    const dueAmount = dura * 70;
+    let lesson;
+    if (payToday === true && dueAmount > paidAmount) {
+      setPayAmount(dueAmount - paidAmount);
       payToggler(true);
+      lesson = 0;
+    } else if (paidAmount > dueAmount) {
+      lesson = (paidAmount - dueAmount) / 70;
+
+      payConfig.paidDets(0, true, "N/A");
+    } else {
+      lesson = 0;
+      payConfig.paidDets(0, true, "N/A");
     }
+
+    setLesson(lesson);
 
     setDuration(dura.toString() + " Hours");
 
-    validateDate(dura, event.target.value);
+    validateDate(dura, event.target.value, lesson);
   }
 
-  function validateDate(dura, endT) {
+  function validateDate(dura, endT, lesson) {
     let dateTimeArr = [];
 
     dateTimeArr.push(selectedDate);
     dateTimeArr.push(endT);
     dateTimeArr.push(startApp);
     dateTimeArr.push(dura.toString() + " hours");
+    dateTimeArr.push(lesson);
+
+    console.log(dateTimeArr);
 
     dispatch({
       value: dateTimeArr,

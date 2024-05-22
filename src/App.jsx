@@ -136,8 +136,8 @@ function App() {
     }
   }, [width]);
 
-  function visiToggler() {
-    setNavVisi(!navVisi);
+  function visiToggler(val) {
+    setNavVisi(val);
   }
 
   function switchToggler() {
