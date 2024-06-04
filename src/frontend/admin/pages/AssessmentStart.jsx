@@ -1,24 +1,29 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { FadeLoader } from "react-spinners";
 
 import ErrorModal from "../../shared/elements/ErrorModal";
 import { Link } from "react-router-dom";
+import { useDate } from "../../shared/hooks/date-hook";
+
+import { AdminAuthContext } from "../../shared/context/admin-auth-context";
 
 export default function AssessmentStart() {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { getIntValue } = useDate();
   const [appData, setAppData] = useState();
+  const curD = new Date();
+
+  const adminAuth = useContext(AdminAuthContext);
+
+  const today = curD.toLocaleDateString("en-CA");
   useEffect(() => {
-    const curD = new Date();
-
-    const today = curD.toLocaleDateString("en-CA");
-
     const fetchData = async () => {
       try {
         const responseData = await sendRequest(
           `${
             import.meta.env.VITE_SERVER_NAME
-          }api/dashboard/appointment/2024-05-11`
+          }api/dashboard/appointment/${today}`
         );
         responseData.appointment?.length > 0 &&
           handleAppData(responseData.appointment);
@@ -28,14 +33,15 @@ export default function AssessmentStart() {
     };
 
     fetchData();
-  }, [sendRequest]);
+  }, [sendRequest, today]);
 
   const handleAppData = (appDat) => {
     let apps = [];
     for (const app of appDat) {
       if (
         app.status === "PAID AND CONFIRMED" ||
-        app.status === "USER CONFIRMED"
+        app.status === "USER CONFIRMED" ||
+        app.status === "EXPIRED"
       ) {
         apps.push(app);
       }
@@ -47,6 +53,26 @@ export default function AssessmentStart() {
     clearError();
     window.location.reload();
   }
+
+  const delayAppointments = async (startTime) => {
+    const startVal = getIntValue(startTime);
+
+    try {
+      let formData = new FormData();
+      formData.append("startInt", startVal);
+      await sendRequest(
+        `${
+          import.meta.env.VITE_SERVER_NAME
+        }api/admin/delay-appointment/${startTime}/${today}`,
+        "POST",
+        formData,
+        { Authorization: "Bearer " + adminAuth.adminToken }
+      );
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -129,7 +155,14 @@ export default function AssessmentStart() {
                           Start Assessment
                         </button>
                       </Link>
-                      <button className="btn btn-danger">Delay 30 Mins</button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          delayAppointments(elem.startTime);
+                        }}
+                      >
+                        Delay 30 Mins
+                      </button>
                     </div>
                   </div>
                 </div>

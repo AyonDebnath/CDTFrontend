@@ -250,6 +250,10 @@ function App() {
           path="/admin/evaluate/:appid/:uid"
           element={<AssessmentEvaluate />}
         ></Route>
+        <Route
+          path="/admin/edit-appointment/:aid"
+          element={<AppointmentCenter />}
+        ></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </>
     );

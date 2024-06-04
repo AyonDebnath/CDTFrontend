@@ -13,7 +13,13 @@ import { PaymentModalContext } from "../context/payment-context";
 import { PaymentDetailsContext } from "../context/pay-details.context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-export default function CheckoutAppointment({ due, lesson }) {
+export default function CheckoutAppointment({
+  due,
+  lesson,
+  courseName,
+  duration,
+  extraPay,
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const { sendRequest } = useHttpClient();
@@ -62,7 +68,9 @@ export default function CheckoutAppointment({ due, lesson }) {
           try {
             const formData = new FormData();
             formData.append("lessons", lesson);
-
+            formData.append("courseName", courseName);
+            formData.append("amount", due);
+            formData.append("duration", duration);
             await sendRequest(
               `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user-lesson/${
                 auth.userId
@@ -76,6 +84,17 @@ export default function CheckoutAppointment({ due, lesson }) {
           }
 
           payShow.payToggler(false);
+        } else if (extraPay) {
+          try {
+            await sendRequest(
+              `${import.meta.env.VITE_SERVER_NAME}api/admin/user-paydue/${
+                auth.userId
+              }`
+            );
+            payShow.payToggler(false);
+          } catch (err) {
+            console.log(err);
+          }
         } else {
           pay.paidDets(due, true, "PAID");
           payShow.payToggler(false);
@@ -107,4 +126,7 @@ export default function CheckoutAppointment({ due, lesson }) {
 CheckoutAppointment.propTypes = {
   due: PropTypes.number,
   lesson: PropTypes.string,
+  courseName: PropTypes.string,
+  duration: PropTypes.string,
+  extraPay: PropTypes.bool,
 };

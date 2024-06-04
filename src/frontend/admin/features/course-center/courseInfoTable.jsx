@@ -51,6 +51,9 @@ export default function CourseInfoTable({ courseData }) {
                       Lesson Number
                     </th>
                     <th scope="col" className="text-center">
+                      Lesson Duration
+                    </th>
+                    <th scope="col" className="text-center">
                       Number of Features
                     </th>
                     <th scope="col" style={{ textAlign: "Center" }}>
@@ -72,6 +75,9 @@ export default function CourseInfoTable({ courseData }) {
                         <td className="owner text-center">${elem.price}</td>
                         <td className="industry_type text-center">
                           {elem.number}
+                        </td>
+                        <td className="industry_type text-center">
+                          {elem.duration} hour
                         </td>
                         <td className="d-flex justify-content-center ">
                           <h5>

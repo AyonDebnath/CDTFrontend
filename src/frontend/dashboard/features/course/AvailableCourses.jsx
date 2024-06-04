@@ -13,6 +13,9 @@ export default function AvailableCourses() {
   const [userData, setUserData] = useState();
   const [pay, setPay] = useState();
   const [amount, setAmount] = useState();
+  const [number, setNumber] = useState();
+  const [name, setName] = useState();
+  const [duration, setDuration] = useState();
 
   const warnings = {
     war1: (
@@ -52,6 +55,15 @@ export default function AvailableCourses() {
     ),
   };
 
+  const warnings2 = {
+    war1: (
+      <h2 className="text-warning">
+        Please Book Lesson For Your Active Course{" "}
+        <span className="text-danger">{userData?.activeCourse}</span> First.
+        Before Purchasing Another Course.
+      </h2>
+    ),
+  };
   const userId = useParams().uid;
 
   const payToggler = (val) => {
@@ -133,6 +145,9 @@ export default function AvailableCourses() {
                                 onClick={() => {
                                   payToggler(true);
                                   setAmount(elem.price);
+                                  setNumber(elem.number);
+                                  setName(elem.name);
+                                  setDuration(elem.duration);
                                 }}
                                 className="btn btn-soft-primary w-sm waves-effect waves-light"
                               >
@@ -141,12 +156,23 @@ export default function AvailableCourses() {
                             </div>
                           </div>
 
-                          <AppointmentPay
-                            userData={userData}
-                            amount={elem.price}
-                            warning={warnings}
-                            lesson={elem.number}
-                          />
+                          {amount && number && name && duration && (
+                            <AppointmentPay
+                              userData={userData}
+                              amount={amount}
+                              warning={
+                                userData?.activeCourse == "N/A"
+                                  ? warnings
+                                  : warnings2
+                              }
+                              lesson={number}
+                              courseName={name}
+                              duration={duration}
+                              val={
+                                userData?.activeCourse == "N/A" ? false : true
+                              }
+                            />
+                          )}
                         </div>
                         {/* <!--end col--> */}
                         <div className="col-lg-6">

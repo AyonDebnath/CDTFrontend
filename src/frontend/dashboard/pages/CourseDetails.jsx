@@ -12,7 +12,7 @@ export default function CourseDetails() {
         <PreferredPackage />
         <CourseAssessment />
         <AvailableCourses />
-        <CourseProgress />
+        {/* <CourseProgress /> */}
       </div>
     </>
   );

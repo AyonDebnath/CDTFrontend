@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useContext, useEffect } from "react";
 import { useState, useReducer } from "react";
 import dayjs from "dayjs";
@@ -10,7 +11,6 @@ import { DateContext } from "../context/date-context";
 import { PaymentModalContext } from "../context/payment-context";
 import AppointmentPay from "../features/modals/appointmentPay";
 import { PaymentDetailsContext } from "../context/pay-details.context";
-import { AuthContext } from "../../shared/context/auth-context";
 
 function dateReducer(state, action) {
   switch (action.type) {
@@ -18,7 +18,7 @@ function dateReducer(state, action) {
       return {
         ...state,
         value: action.value,
-        isValid: action.value.length === 5,
+        isValid: action.value.length === 6,
       };
     case "TOUCH":
       return {
@@ -51,7 +51,6 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
   const [payShow, setPayShow] = useState(false);
   const [payToday, setPayToday] = useState(false);
   const [payAmount, setPayAmount] = useState();
-  const [lesson, setLesson] = useState();
 
   const payConfig = useContext(PaymentDetailsContext);
 
@@ -147,7 +146,7 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
 
     let startTimer = curD.getHours();
     startTimer = startTimer + 1;
-    if (startTimer >= 16) {
+    if (startTimer >= 18) {
       curD.setDate(curD.getDate() + 1);
     }
     let dateNow = "";
@@ -210,7 +209,7 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
 
     const avaiTimeArr = [];
 
-    for (let i = startTime; i <= 16; i += 1.5) {
+    for (let i = startTime; i <= 18; i += 1.5) {
       if (i <= 11.5) {
         if (i % 1 === 0) {
           avaiTimeArr.push(i.toString() + ":00" + "AM");
@@ -315,22 +314,19 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
         if (!newBlockedTime.includes(elemInt - parseFloat(differ))) {
           newAvaiTime = getTimeValue(elemInt - parseFloat(differ));
         }
-      } else {
-        newAvaiTime = "";
       }
       return newAvaiTime;
     });
-
+    console.log(arr1);
     if (
       arr1[arr1.length - 1] != "3:00PM" ||
       arr1[arr1.length - 1] != "3:30PM" ||
-      arr1[arr1.length - 1] != "4:00PM"
+      arr1[arr1.length - 1] != "6:00PM"
     ) {
       arr1.push(getTimeValue(getIntValue(arr1[arr1.length - 1]) + 1.5));
     }
 
     arr1 = arr1.filter((elem) => elem !== "");
-
     setAppTime(arr1);
     setVisiRadio1("1");
   }
@@ -342,29 +338,53 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
 
     let endHour;
 
-    endHour = startHour + 1.5;
+    if (user.lessons > 0) {
+      endHour = startHour + parseFloat(user.courseDuration);
 
-    for (let j = endHour; j <= startHour + 2; j += 0.5) {
-      if (j <= 11.5) {
-        if (j % 1 === 0) {
-          avaiTimeArr2.push(j.toString() + ":00" + "AM");
+      if (endHour <= 11.5) {
+        if (endHour % 1 === 0) {
+          avaiTimeArr2.push(endHour.toString() + ":00" + "AM");
         } else {
-          avaiTimeArr2.push(Math.floor(j).toString() + ":30" + "AM");
+          avaiTimeArr2.push(Math.floor(endHour).toString() + ":30" + "AM");
         }
-      } else if (j > 11.5 && j <= 12.5) {
-        if (j % 1 === 0) {
-          avaiTimeArr2.push(j.toString() + ":00" + "PM");
+      } else if (endHour > 11.5 && endHour <= 12.5) {
+        if (endHour % 1 === 0) {
+          avaiTimeArr2.push(endHour.toString() + ":00" + "PM");
         } else {
-          avaiTimeArr2.push(Math.floor(j).toString() + ":30" + "PM");
+          avaiTimeArr2.push(Math.floor(endHour).toString() + ":30" + "PM");
         }
       } else {
-        if (j % 1 === 0) {
-          avaiTimeArr2.push((j - 12).toString() + ":00" + "PM");
+        if (endHour % 1 === 0) {
+          avaiTimeArr2.push((endHour - 12).toString() + ":00" + "PM");
         } else {
-          avaiTimeArr2.push(Math.floor(j - 12).toString() + ":30" + "PM");
+          avaiTimeArr2.push(Math.floor(endHour - 12).toString() + ":30" + "PM");
+        }
+      }
+    } else {
+      endHour = startHour + 1.5;
+      for (let j = endHour; j <= startHour + 2; j += 0.5) {
+        if (j <= 11.5) {
+          if (j % 1 === 0) {
+            avaiTimeArr2.push(j.toString() + ":00" + "AM");
+          } else {
+            avaiTimeArr2.push(Math.floor(j).toString() + ":30" + "AM");
+          }
+        } else if (j > 11.5 && j <= 12.5) {
+          if (j % 1 === 0) {
+            avaiTimeArr2.push(j.toString() + ":00" + "PM");
+          } else {
+            avaiTimeArr2.push(Math.floor(j).toString() + ":30" + "PM");
+          }
+        } else {
+          if (j % 1 === 0) {
+            avaiTimeArr2.push((j - 12).toString() + ":00" + "PM");
+          } else {
+            avaiTimeArr2.push(Math.floor(j - 12).toString() + ":30" + "PM");
+          }
         }
       }
     }
+
     setEndTimeArr(avaiTimeArr2);
   }
 
@@ -376,39 +396,35 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
     let dura;
 
     dura = endTime - startTime;
-    const paidAmount = parseInt(user.balance);
-    const dueAmount = dura * 70;
-    let lesson;
-    if (payToday === true && dueAmount > paidAmount) {
-      setPayAmount(dueAmount - paidAmount);
-      payToggler(true);
-      lesson = 0;
-    } else if (paidAmount > dueAmount) {
-      lesson = (paidAmount - dueAmount) / 70;
+    let payAmount;
+    dura == 1.5 ? (payAmount = 110) : (payAmount = 140);
+    let lesson = user.lessons;
 
-      payConfig.paidDets(0, true, "N/A");
-    } else {
-      lesson = 0;
-      payConfig.paidDets(0, true, "N/A");
+    if (user.lessons > 0) {
+      setPayToday(false);
+      payConfig.paidDets(payAmount, true, "PAID");
+      lesson -= 1;
+      payAmount = 0;
     }
 
-    setLesson(lesson);
+    if (payToday === true && payAmount > 0) {
+      payToggler(true);
+      setPayAmount(payAmount);
+    }
 
     setDuration(dura.toString() + " Hours");
 
-    validateDate(dura, event.target.value, lesson);
+    validateDate(dura, event.target.value, lesson, payAmount);
   }
 
-  function validateDate(dura, endT, lesson) {
+  function validateDate(dura, endT, lesson, payAmount) {
     let dateTimeArr = [];
-
     dateTimeArr.push(selectedDate);
     dateTimeArr.push(endT);
     dateTimeArr.push(startApp);
     dateTimeArr.push(dura.toString() + " hours");
     dateTimeArr.push(lesson);
-
-    console.log(dateTimeArr);
+    dateTimeArr.push(payAmount);
 
     dispatch({
       value: dateTimeArr,

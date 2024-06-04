@@ -7,7 +7,10 @@ import { useContext, useState } from "react";
 import { AdminAuthContext } from "../../shared/context/admin-auth-context";
 
 import { FadeLoader } from "react-spinners";
-import { VALIDATOR_REQUIRE } from "../../../../public/frontend/validators";
+import {
+  VALIDATOR_LESSON,
+  VALIDATOR_REQUIRE,
+} from "../../../../public/frontend/validators";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function CourseCreate() {
@@ -24,6 +27,10 @@ export default function CourseCreate() {
         isValid: false,
       },
       number: {
+        value: "",
+        isValid: false,
+      },
+      duration: {
         value: "",
         isValid: false,
       },
@@ -52,6 +59,7 @@ export default function CourseCreate() {
       formData.append("price", formState.inputs.price.value);
       formData.append("number", formState.inputs.number.value);
       formData.append("featureArray", arr);
+      formData.append("duration", formState.inputs.duration.value);
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/admin/course-create`,
         "POST",
@@ -153,6 +161,19 @@ export default function CourseCreate() {
                       onInput={inputHandler}
                     />
                     <label htmlFor="zipCode">Number of Lessons</label>
+                  </div>
+                  <div className="form-floating">
+                    <Input
+                      elem="input"
+                      id="duration"
+                      type="number"
+                      className="form-control"
+                      placeholder="Please Enter Duration of Lessons"
+                      errorText="Please Enter a Valid Duration for Lessons"
+                      validator={[VALIDATOR_REQUIRE(), VALIDATOR_LESSON()]}
+                      onInput={inputHandler}
+                    />
+                    <label htmlFor="zipCode">Duration of each Lesson</label>
                   </div>
                   {featureElem}
                   <div className="form-floating">

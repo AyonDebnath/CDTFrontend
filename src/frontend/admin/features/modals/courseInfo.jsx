@@ -46,6 +46,12 @@ export default function CourseInfoModal({ curCourse }) {
                         {curCourse.number}
                       </td>
                     </tr>
+                    <tr>
+                      <td> Duration of Lessons</td>
+                      <td style={{ textAlign: "center" }}>
+                        {curCourse.duration}
+                      </td>
+                    </tr>
                     {curCourse.featureArray.map((elem) => {
                       return (
                         <tr key={curCourse.featureArray.indexOf(elem)}>

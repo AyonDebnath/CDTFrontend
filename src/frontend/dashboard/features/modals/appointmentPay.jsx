@@ -14,7 +14,16 @@ import React from "react";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-export default function AppointmentPay({ userData, amount, warning, lesson }) {
+export default function AppointmentPay({
+  userData,
+  amount,
+  warning,
+  lesson,
+  courseName,
+  duration,
+  val,
+  extraPay,
+}) {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [checked, setChecked] = useState(false);
   const [visi, setVisi] = useState(false);
@@ -76,9 +85,6 @@ export default function AppointmentPay({ userData, amount, warning, lesson }) {
       {
         <Modal
           isOpen={pay.payNow}
-          toggle={() => {
-            pay.payToggler(false);
-          }}
           size="lg"
           // style="display: none"
         >
@@ -87,13 +93,15 @@ export default function AppointmentPay({ userData, amount, warning, lesson }) {
               <h5 className="modal-title" id="payLabel">
                 Confirm Payment
               </h5>
-              <Button
-                type="button"
-                className="btn-close"
-                onClick={() => {
-                  pay.payToggler(false);
-                }}
-              ></Button>
+              {extraPay || (
+                <Button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => {
+                    pay.payToggler(false);
+                  }}
+                ></Button>
+              )}
             </div>
             <div className="modal-body">
               <div className="container">
@@ -109,7 +117,13 @@ export default function AppointmentPay({ userData, amount, warning, lesson }) {
                           </React.Fragment>
                         );
                       })}
-                      <div className="d-flex flex-column align-items-center">
+                      <div
+                        className={` ${
+                          val
+                            ? "destroy"
+                            : "d-flex flex-column align-items-center"
+                        }`}
+                      >
                         <div className="form-check form-check-success mt-3">
                           <input
                             className="form-check-input"
@@ -151,6 +165,9 @@ export default function AppointmentPay({ userData, amount, warning, lesson }) {
                         <CheckoutAppointment
                           due={parseInt(amount)}
                           lesson={lesson}
+                          courseName={courseName}
+                          duration={duration}
+                          extraPay={extraPay}
                         />
                       </Elements>
                     </div>
@@ -158,16 +175,18 @@ export default function AppointmentPay({ userData, amount, warning, lesson }) {
                 )}
               </div>
             </div>
-            <div className="modal-footer">
-              <button
-                onClick={() => {
-                  pay.payToggler(false);
-                }}
-                className="btn btn-light"
-              >
-                Close
-              </button>
-            </div>
+            {extraPay || (
+              <div className="modal-footer">
+                <button
+                  onClick={() => {
+                    pay.payToggler(false);
+                  }}
+                  className="btn btn-light"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
           {/* <!-- /.modal-content --> */}
           {/* <!-- /.modal-dialog --> */}
@@ -182,4 +201,8 @@ AppointmentPay.propTypes = {
   amount: PropTypes.string,
   warning: PropTypes.object,
   lesson: PropTypes.string,
+  courseName: PropTypes.string,
+  duration: PropTypes.string,
+  val: PropTypes.bool,
+  extraPay: PropTypes.bool,
 };

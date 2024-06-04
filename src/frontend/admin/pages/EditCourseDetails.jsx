@@ -7,7 +7,10 @@ import { useContext, useState, useEffect } from "react";
 import { AdminAuthContext } from "../../shared/context/admin-auth-context";
 
 import { FadeLoader } from "react-spinners";
-import { VALIDATOR_REQUIRE } from "../../../../public/frontend/validators";
+import {
+  VALIDATOR_LESSON,
+  VALIDATOR_REQUIRE,
+} from "../../../../public/frontend/validators";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditCourse() {
@@ -29,6 +32,10 @@ export default function EditCourse() {
         isValid: false,
       },
       features: {
+        value: "",
+        isValid: false,
+      },
+      duration: {
         value: "",
         isValid: false,
       },
@@ -68,6 +75,9 @@ export default function EditCourse() {
               features: {
                 value: responseData.course.featureArray?.length,
                 isValid: true,
+              },
+              duration: {
+                value: responseData.course.duration,
               },
             },
             true
@@ -114,6 +124,7 @@ export default function EditCourse() {
       formData.append("name", formState.inputs.name.value);
       formData.append("price", formState.inputs.price.value);
       formData.append("number", formState.inputs.number.value);
+      formData.append("duration", formState.inputs.duration.value);
       formData.append("featureArray", arr);
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/admin/course-create`,
@@ -225,6 +236,21 @@ export default function EditCourse() {
                         valid={formState.inputs.number.isValid}
                       />
                       <label htmlFor="zipCode">Number of Lessons</label>
+                    </div>
+                    <div className="form-floating">
+                      <Input
+                        elem="input"
+                        id="duration"
+                        type="number"
+                        className="form-control"
+                        placeholder="Please Enter Duration of Lessons"
+                        errorText="Please Enter a Valid Duration for Lessons"
+                        validator={[VALIDATOR_REQUIRE(), VALIDATOR_LESSON()]}
+                        onInput={inputHandler}
+                        numVal={parseInt(formState.inputs.duration.value)}
+                        valid={formState.inputs.duration.isValid}
+                      />
+                      <label htmlFor="zipCode">Duration of Lessons</label>
                     </div>
                     {featureElem}
                     <div className="form-floating">

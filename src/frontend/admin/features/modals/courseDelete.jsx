@@ -90,6 +90,7 @@ export default function CourseDelete({ curCourse }) {
                     <div className="col-1 col-md-3"></div>
                     <div className="col-10 col-md-6">
                       <button
+                        type="submit"
                         disabled={!formState.isValid}
                         className="btn btn-danger d-flex justify-content-around"
                       >

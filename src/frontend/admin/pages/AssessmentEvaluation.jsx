@@ -210,6 +210,8 @@ export default function AssessmentEvaluate() {
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [userData, setUserData] = useState();
+  const [first, setFirst] = useState();
+  const [data, setData] = useState(false);
 
   const [inputState, setInputState] = useState(initialState);
   const [total, setTotal] = useState(0);
@@ -250,7 +252,8 @@ export default function AssessmentEvaluate() {
       formData.append("appointmentId", appID);
       formData.append("infractionsStr", JSON.stringify(assessment));
       formData.append("total", total);
-      const responseData = await sendRequest(
+      formData.append("firstLesson", first);
+      await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/admin/user/create/assessment`,
         "POST",
         formData,
@@ -3026,11 +3029,43 @@ export default function AssessmentEvaluate() {
                   </h4>
                 </div>
               </div>
-              <div className="d-flex justify-content-center mb-5">
-                <button className="btn btn-success" onClick={submitAssessment}>
-                  Submit Assessment
-                </button>
-              </div>
+              {data || (
+                <>
+                  <h4 className="text-center">
+                    Is this the users first lesson?
+                  </h4>
+                  <div className="d-flex justify-content-center mb-5">
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        setFirst(true);
+                        setData(true);
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => {
+                        setFirst(false);
+                        setData(true);
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                </>
+              )}
+              {data && (
+                <div className="d-flex justify-content-center mb-5">
+                  <button
+                    className="btn btn-success"
+                    onClick={submitAssessment}
+                  >
+                    Submit Assessment
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-lg-3"></div>

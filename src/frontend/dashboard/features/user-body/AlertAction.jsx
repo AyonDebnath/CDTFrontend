@@ -168,7 +168,7 @@ export default function AlerAction() {
           <AssessmentModalContext.Provider
             value={{ show: ass, showToggler: assToggler }}
           >
-            <div className="col-xxl-8">
+            <div className="col-xxl-12">
               <div className="card">
                 <div className="card-header border-0">
                   <div></div>

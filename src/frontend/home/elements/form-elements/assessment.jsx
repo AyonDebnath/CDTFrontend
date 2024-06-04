@@ -85,27 +85,28 @@ export default function Assessment() {
     }
 
     try {
+      const formData = new FormData();
+      formData.append("date", appDate);
+      formData.append("startTime", startTime);
+      formData.append("endTime", endTime);
+      formData.append("duration", "1.5 hour");
+      formData.append("status", "PENDING");
+      formData.append("paymentStatus", "UNPAID");
+      formData.append("interacNum", "N/A");
+      formData.append("amountPaid", "0");
+      formData.append("due", "110");
+      formData.append("address", formState.inputs.location.value);
+      formData.append("name", formState.inputs.name.value);
+      formData.append("number", formState.inputs.number.value);
+      formData.append("completed", "NO");
+      formData.append("courseName", "N/A");
+      formData.append("appName", "Assessment");
+      formData.append("email", formState.inputs.email.value);
+      formData.append("alertText", "N/A");
       await sendRequest(
         `${import.meta.env.VITE_SERVER_NAME}api/home/appointment/guest`,
         "POST",
-        { "Content-Type": "application/json" },
-        JSON.stringify({
-          name: formState.inputs.name.value,
-          number: formState.inputs.number.value,
-          email: formState.inputs.email.value,
-          address: formState.inputs.location.value,
-          date: appDate,
-          status: "PENDING",
-          startTime: startTime,
-          endTime: endTime,
-          duration: "1.5 hour",
-          paymentStatus: "UNPAID",
-          interacNum: "N/A",
-          amountPaid: "0",
-          due: "110",
-          completed: "NO",
-          courseName: "Assessment",
-        })
+        formData
       );
     } catch (err) {
       console.log(err);

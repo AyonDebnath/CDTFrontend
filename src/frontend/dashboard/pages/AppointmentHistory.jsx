@@ -246,7 +246,8 @@ export default function AppointmentHistory() {
                                     disabled={
                                       elem.status === "USER CONFIRMED" ||
                                       elem.status === "PENDING" ||
-                                      elem.status === "EXPIRED"
+                                      elem.status === "EXPIRED" ||
+                                      elem.status === "COMPLETED"
                                     }
                                     onClick={() => {
                                       handleConfirm(elem.id);

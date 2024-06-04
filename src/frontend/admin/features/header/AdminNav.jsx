@@ -215,16 +215,6 @@ export default function AdminNav() {
                       Start Assessment{" "}
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link
-                      to={`/admin/history-assessment/${auth.adminId}`}
-                      className="nav-link"
-                      data-key="t-main-calender"
-                    >
-                      {" "}
-                      Assessment History{" "}
-                    </Link>
-                  </li>
                 </ul>
               </div>
             </li>

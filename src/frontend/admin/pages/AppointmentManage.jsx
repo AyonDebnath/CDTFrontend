@@ -32,7 +32,6 @@ export default function AppManage() {
     fetchData();
     const handleAppointment = async (appInfo) => {
       for (const app of appInfo) {
-        console.log(app.id);
         let curD = new Date();
         let today = curD.getDate();
         let curTime = curD.getHours() + 1;
@@ -58,7 +57,6 @@ export default function AppManage() {
               }
             ).then(async (r) => {
               const res = await r.json();
-              console.log(res);
             });
           } catch (err) {
             console.log(err);
@@ -86,7 +84,6 @@ export default function AppManage() {
               }
             ).then(async (r) => {
               const res = await r.json();
-              console.log(res);
             });
           } catch (err) {
             console.log(err);

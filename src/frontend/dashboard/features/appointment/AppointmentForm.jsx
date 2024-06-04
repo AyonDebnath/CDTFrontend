@@ -76,22 +76,24 @@ export default function AppointmentForm() {
 
   async function submitHandler(event) {
     event.preventDefault();
+    console.log(formState.inputs.dateTime.value);
     const appDate = formState.inputs.dateTime.value[0];
     const startTime = formState.inputs.dateTime.value[2];
     const endTime = formState.inputs.dateTime.value[1];
     const duration = formState.inputs.dateTime.value[3];
     const lesson = formState.inputs.dateTime.value[4];
-    const durArr = duration.split(" ");
-    const amount = (parseFloat(durArr[0]) * 70).toString();
-
+    const amount = formState.inputs.dateTime.value[5];
+    let duePay;
     try {
       const formData = new FormData();
 
       if (paid && paymentStatus != "N/A") {
+        duePay = 0;
         formData.append("paymentStatus", paymentStatus);
         formData.append("amountPaid", due);
         formData.append("due", "0");
       } else {
+        duePay = amount;
         formData.append("paymentStatus", "UNPAID");
         formData.append("amountPaid", "0");
         formData.append("due", amount);
@@ -130,7 +132,17 @@ export default function AppointmentForm() {
 
       try {
         const formData = new FormData();
-        formData.append("lessons", lesson);
+        if (parseInt(lesson) > 0) {
+          formData.append("lessons", lesson);
+          formData.append("courseName", userData.activeCourse);
+          formData.append("amount", 0);
+          formData.append("duration", userData.duration);
+        } else {
+          formData.append("lessons", lesson);
+          formData.append("courseName", "N/A");
+          formData.append("amount", duePay);
+          formData.append("duration", "N/A");
+        }
         await sendRequest(
           `${import.meta.env.VITE_SERVER_NAME}api/dashboard/user-lesson/${
             auth.userId
