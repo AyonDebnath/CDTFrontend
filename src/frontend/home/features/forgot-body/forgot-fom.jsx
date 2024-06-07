@@ -4,20 +4,15 @@ import {
 } from "../../../../../public/frontend/validators";
 import useForm from "../../../shared/hooks/form-hook";
 import Input from "../../elements/form-elements/input";
-import { useContext } from "react";
-import { AuthContext } from "../../../shared/context/auth-context";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorModal from "../../../shared/elements/ErrorModal";
 import { useHttpClient } from "../../../shared/hooks/http-hook";
 import { FadeLoader } from "react-spinners";
 
-function SignInForm() {
+export default function ForgotForm() {
   const [formState, inputHandler] = useForm(
     {
-      email: { value: "", isValid: false },
-      password: { value: "", isValid: false },
+      input: { value: "", isValid: false },
     },
     false
   );
@@ -26,28 +21,21 @@ function SignInForm() {
 
   const navigate = useNavigate();
 
-  const [passType, setPasstype] = useState(true);
-  const auth = useContext(AuthContext);
-
   async function submitHandler(event) {
     event.preventDefault();
     try {
-      const responseData = await sendRequest(
-        `${import.meta.env.VITE_SERVER_NAME}api/home/login`,
+      await sendRequest(
+        `${import.meta.env.VITE_SERVER_NAME}api/home/forget-password`,
         "POST",
         JSON.stringify({
-          email: formState.inputs.email.value,
-          password: formState.inputs.password.value,
+          input: formState.inputs.input.value,
         }),
         {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + auth.token,
         }
       );
 
-      auth.login(responseData.userId, responseData.token);
-
-      navigate("/user-dashboard/" + responseData.userId);
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -78,9 +66,12 @@ function SignInForm() {
           {/* <!-- Section Title --> */}
           <div className="row">
             <div className="section-title text-center col-12 mb-45">
-              <h3 className="heading">Sign In</h3>
+              <h3 className="heading">Reset Password</h3>
               <div className="excerpt">
-                <p>Sign into your account to schedule appointments.</p>
+                <p>
+                  Type in your Email or Phone Number nassociated with the
+                  account to reset your password
+                </p>
               </div>
               <i className="icofont icofont-traffic-light"></i>
             </div>
@@ -92,36 +83,13 @@ function SignInForm() {
               <form id="signin-form" onSubmit={submitHandler}>
                 <div className="input">
                   <Input
-                    id="email"
+                    id="input"
                     onInput={inputHandler}
                     elem="input"
-                    placeholder="Email"
+                    placeholder="Email/ Number"
                     type="text"
-                    errorText="Please Enter Your Email"
-                    validator={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
-                  />
-                </div>
-                <div className="input pass-div">
-                  <Input
-                    id="password"
-                    onInput={inputHandler}
-                    elem="input"
-                    placeholder="Pasword"
-                    type={`${passType ? "password" : "text"}`}
-                    errorText="Please Enter Your Password"
+                    errorText="Please Enter Your Email/Number"
                     validator={[VALIDATOR_REQUIRE()]}
-                  />
-                  <BsEye
-                    onClick={() => {
-                      setPasstype(false);
-                    }}
-                    className={`${passType ? "pass-visi" : "destroy"}`}
-                  />
-                  <BsEyeSlash
-                    onClick={() => {
-                      setPasstype(true);
-                    }}
-                    className={`${passType ? "destroy" : "pass-visi"}`}
                   />
                 </div>
                 <div className="row">
@@ -133,30 +101,11 @@ function SignInForm() {
                         className="btn color submit-btn"
                         disabled={!formState.isValid}
                       >
-                        Log In
+                        Reset
                       </button>
                     </div>
                   </div>
                   <div className="col-1"></div>
-                  <div className="d-flex justify-content-around">
-                    <p className="">
-                      Forgot Password?{" "}
-                      <Link to="/forget-password" className="signup-link">
-                        Reset Password
-                      </Link>
-                    </p>
-                    <p className="">
-                      Don't have an account?{" "}
-                      <a
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#signupModal"
-                        className="signup-link"
-                      >
-                        Signup now
-                      </a>
-                    </p>
-                  </div>
                 </div>
               </form>
               <p className="form-messege"></p>
@@ -168,5 +117,3 @@ function SignInForm() {
     </>
   );
 }
-
-export default SignInForm;

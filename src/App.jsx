@@ -31,6 +31,9 @@ import CourseInfo from "./frontend/admin/pages/CourseInfo";
 import EditCourse from "./frontend/admin/pages/EditCourseDetails";
 import AssessmentStart from "./frontend/admin/pages/AssessmentStart";
 import AssessmentEvaluate from "./frontend/admin/pages/AssessmentEvaluation";
+import ForgetPassword from "./frontend/home/pages/forgetPassword";
+import ResetPassword from "./frontend/home/pages/resetPassword";
+import SuccessReset from "./frontend/home/pages/successReset";
 
 function App() {
   const [token, setToken] = useState();
@@ -177,6 +180,7 @@ function App() {
         <Route path="/services" element={<Service />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/forget-password" element={<ForgetPassword />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </>
     );
@@ -266,6 +270,9 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/forget-password" element={<ForgetPassword />}></Route>
+        <Route path="/reset/:token" element={<ResetPassword />}></Route>
+        <Route path="/success-reset" element={<SuccessReset />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </>
     );
