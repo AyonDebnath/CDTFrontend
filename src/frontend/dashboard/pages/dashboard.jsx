@@ -38,11 +38,17 @@ export default function Dashboard() {
       for (const app of appInfo) {
         let curD = new Date();
         let today = curD.getDate();
+        let curMonth = curD.getMonth() + 1;
         let curTime = curD.getHours() + 1;
         let dateArr = app.date.split("-");
         let appDay = dateArr[2];
         let appTime = getIntValue(app.startTime) + 2;
-        if (parseInt(appDay) < today) {
+        let appMonth = parseInt(dateArr[1].slice(1));
+        if (
+          parseInt(appDay) < today &&
+          appMonth === curMonth &&
+          app.status != "COMPLETED"
+        ) {
           try {
             await fetch(
               `${
@@ -67,6 +73,7 @@ export default function Dashboard() {
         } else if (
           parseInt(appDay) === today &&
           appTime < curTime &&
+          appMonth === curMonth &&
           app.status != "COMPLETED"
         ) {
           try {

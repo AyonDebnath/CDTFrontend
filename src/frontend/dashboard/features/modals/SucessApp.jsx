@@ -127,7 +127,7 @@ export default function SucessApp({ userID, appDet }) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="payLabel">
-                  Confirm Payment
+                  Confirm Appointment
                 </h5>
                 <Button
                   type="button"
