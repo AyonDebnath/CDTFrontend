@@ -21,7 +21,7 @@ export default function AppManage() {
           `${import.meta.env.VITE_SERVER_NAME}api/admin/appointment/all`
         ).then(async (r) => {
           const res = await r.json();
-          setAppointmentData(res.appointment);
+          setAppointmentData(res.appointment.reverse());
           res?.appointment?.length > 0 && handleAppointment(res.appointment);
         });
       } catch (err) {
@@ -34,11 +34,18 @@ export default function AppManage() {
       for (const app of appInfo) {
         let curD = new Date();
         let today = curD.getDate();
+        let curMonth = curD.getMonth() + 1;
         let curTime = curD.getHours() + 1;
         let dateArr = app.date.split("-");
         let appDay = dateArr[2];
+        let appMonth = parseInt(dateArr[1].slice(1));
+
         let appTime = getIntValue(app.startTime) + 2;
-        if (parseInt(appDay) < today && app.status != "COMPLETED") {
+        if (
+          parseInt(appDay) < today &&
+          appMonth === curMonth &&
+          app.status != "COMPLETED"
+        ) {
           try {
             await fetch(
               `${
@@ -64,6 +71,7 @@ export default function AppManage() {
         } else if (
           parseInt(appDay) === today &&
           appTime < curTime &&
+          appMonth === curMonth &&
           app.status != "COMPLETED"
         ) {
           try {

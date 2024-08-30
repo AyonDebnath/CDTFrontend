@@ -174,7 +174,6 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
 
     const maxD = curD.getFullYear().toString() + "-" + monthNow + "-" + dateNow;
 
-    console.log(minD, maxD);
     setMinDate(minD);
     setMaxDate(maxD);
   }, [minDate, maxDate]);
@@ -315,7 +314,6 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
       }
       return newAvaiTime;
     });
-    console.log(arr1);
     if (
       arr1[arr1.length - 1] != "3:00PM" ||
       arr1[arr1.length - 1] != "3:30PM" ||
