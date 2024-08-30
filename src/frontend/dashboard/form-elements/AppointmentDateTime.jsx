@@ -150,18 +150,17 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
       curD.setDate(curD.getDate() + 1);
     }
     let dateNow = "";
+    let monthNow = "";
 
     curD.getDate().toString().length === 1
       ? (dateNow = "0" + curD.getDate().toString())
       : (dateNow = curD.getDate().toString());
 
-    const minD =
-      curD.getFullYear().toString() +
-      "-" +
-      "0" +
-      (curD.getMonth() + 1).toString() +
-      "-" +
-      dateNow;
+    (curD.getMonth() + 1).toString().length === 1
+      ? (monthNow = "0" + (curD.getMonth() + 1).toString())
+      : (monthNow = (curD.getMonth() + 1).toString());
+
+    const minD = curD.getFullYear().toString() + "-" + monthNow + "-" + dateNow;
 
     curD.setDate(curD.getDate() + 90);
 
@@ -169,14 +168,13 @@ export default function AppointmentDateTime({ id, onInput = () => {}, user }) {
       ? (dateNow = "0" + curD.getDate().toString())
       : (dateNow = curD.getDate().toString());
 
-    const maxD =
-      curD.getFullYear().toString() +
-      "-" +
-      "0" +
-      (curD.getMonth() + 1).toString() +
-      "-" +
-      dateNow;
+    (curD.getMonth() + 1).toString().length === 1
+      ? (monthNow = "0" + (curD.getMonth() + 1).toString())
+      : (monthNow = (curD.getMonth() + 1).toString());
 
+    const maxD = curD.getFullYear().toString() + "-" + monthNow + "-" + dateNow;
+
+    console.log(minD, maxD);
     setMinDate(minD);
     setMaxDate(maxD);
   }, [minDate, maxDate]);
